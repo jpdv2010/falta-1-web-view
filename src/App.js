@@ -1,24 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
+import DefaultLayout from './views/DefaultLayout';
+import React, { Suspense } from 'react'
+import { HashRouter, Route, Routes } from 'react-router-dom'
+import './scss/style.scss'
+
+const loading = (
+  <div className="pt-3 text-center">
+    <div className="sk-spinner sk-spinner-pulse"></div>
+  </div>
+)
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <HashRouter>
+        <Suspense fallback={loading}>
+          <Routes>
+            <Route exact path="*" name="Home" element={<DefaultLayout />} />
+          </Routes>
+        </Suspense>
+    </HashRouter>
   );
 }
 
