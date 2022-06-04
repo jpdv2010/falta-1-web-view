@@ -29,23 +29,23 @@ const Event = () => {
 
   console.log(params);
 
-  const getPosition = (position) => {
-    let p;
-    switch(position) {
-      case "A":
-        p = "Atacante"
-        break;
-      case "M":
-        p = "Meio-Campista"
-        break;
-      case "D":
-        p = "Defensor"
-        break;
-      default:
-        p = "Goleiro";
-    }
-    return p;
-  }
+  // const getPosition = (position) => {
+  //   let p;
+  //   switch(position) {
+  //     case "A":
+  //       p = "Atacante"
+  //       break;
+  //     case "M":
+  //       p = "Meio-Campista"
+  //       break;
+  //     case "D":
+  //       p = "Defensor"
+  //       break;
+  //     default:
+  //       p = "Goleiro";
+  //   }
+  //   return p;
+  // }
 
   const getColor = (position) => {
     let color;
@@ -86,9 +86,9 @@ const Event = () => {
                 {getValue(params.id, 'members').map((item, index) => (
                   <CCol lg={4} key={index}>
                     <CCard color={getColor(item.position)} textColor={'white'} className="mb-3">
-                      <CCardHeader>{item.name}</CCardHeader>
+                      <CCardHeader>Participante</CCardHeader>
                       <CCardBody>
-                        <CCardTitle>{getPosition(item.position)}</CCardTitle>
+                        <CCardTitle>{item.name}</CCardTitle>
                         <CCardText>
                           Descrição do Jogador.
                         </CCardText>

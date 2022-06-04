@@ -10,7 +10,7 @@ const DocsExample = (props) => {
       <CNav variant="tabs">
         <CNavItem>
           <CNavLink href="#" active>
-            Preview
+            Membros
           </CNavLink>
         </CNavItem>
       </CNav>
