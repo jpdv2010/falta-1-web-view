@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
 
 import { AppSidebarNav } from './AppSidebarNav'
+import {BtnAddEvent} from './index'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
@@ -28,6 +29,7 @@ const AppSidebar = () => {
       <CSidebarNav>
         <SimpleBar>
           <AppSidebarNav items={navigation} />
+          <BtnAddEvent/>
         </SimpleBar>
       </CSidebarNav>
       <CSidebarToggler
