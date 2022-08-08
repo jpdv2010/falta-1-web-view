@@ -12,18 +12,29 @@ import {
     CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilLockLocked, cilUser, cilCalendar, cilGroup } from '@coreui/icons'
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import ServiceContext from '../../utils/service/ServiceContext'
 
 const AddEvent = () => {
-    const [selectedDate, setSelectedDate] = React.useState(undefined);
+    const [schedule, setSchedule] = React.useState(undefined);
+    const [matchName, setMatchName] = React.useState("");
+    const [amountVacancies, setAmountVacancies] = React.useState(0);
+    const [sport, setSport] = React.useState(undefined);
 
-    const handleDateChange = (value) => {
-        setSelectedDate(value);
+    const saveEvent = () => {
+        let event = {
+            matchName: matchName,
+            schedule: schedule,
+            amountVacancies: amountVacancies,
+            sport: sport
+        };
+
+        ServiceContext.registerMatch(event);
     }
 
     return (
@@ -36,11 +47,13 @@ const AddEvent = () => {
                         <CInputGroupText>
                             <CIcon icon={cilUser} />
                         </CInputGroupText>
-                        <CFormInput placeholder="Nome" autoComplete="name" />
+                        <CFormInput placeholder="Nome" autoComplete="name" onChange={(event) => {setMatchName(event.target?.value)}} value={matchName} />
                     </CInputGroup>
 
                     <CInputGroup className="mb-3">
-                        <CInputGroupText>@</CInputGroupText>
+                        <CInputGroupText>
+                            <CIcon icon={cilCalendar} />
+                        </CInputGroupText>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 disableToolbar
@@ -48,8 +61,8 @@ const AddEvent = () => {
                                 format="dd/MM/yyyy"
                                 margin="normal"
                                 id="date-picker-inline"
-                                value={selectedDate}
-                                onChange={handleDateChange}
+                                value={schedule}
+                                onChange={(value) => {setSchedule(value)}}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
@@ -59,28 +72,17 @@ const AddEvent = () => {
 
                     <CInputGroup className="mb-3">
                         <CInputGroupText>
-                            <CIcon icon={cilLockLocked} />
+                            <CIcon icon={cilGroup} />
                         </CInputGroupText>
                         <CFormInput
-                            type="password"
-                            placeholder="Password"
-                            autoComplete="new-password"
-                        />
-                    </CInputGroup>
-
-                    <CInputGroup className="mb-4">
-                        <CInputGroupText>
-                            <CIcon icon={cilLockLocked} />
-                        </CInputGroupText>
-                        <CFormInput
-                            type="password"
-                            placeholder="Repeat password"
-                            autoComplete="new-password"
+                            type="number"
+                            placeholder="Quantidade de Participantes"
+                            onChange={(event) => {setAmountVacancies(event.target?.value)}}
                         />
                     </CInputGroup>
 
                     <div className="d-grid">
-                        <CButton color="success">Salvar</CButton>
+                        <CButton color="success" onClick={saveEvent}>Salvar</CButton>
                     </div>
                 </CForm>
             </CContainer>

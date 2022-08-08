@@ -12,7 +12,7 @@ class ServiceContext {
     }
 
     static registerMatch = (match) => {
-        return this.doGet('match', match);
+        return this.doPost('match', match);
     }
 
     static getMatch = () => {
@@ -24,7 +24,7 @@ class ServiceContext {
     }
 
     static doPost(endPoint, content) {
-        var promise = new Promise((resolve,regect) {
+        var promise = new Promise((resolve,regect) => {
             axios.post(this.address + endPoint, content).then(result => {
                 resolve(result);
             });
@@ -34,7 +34,7 @@ class ServiceContext {
     }
     
     static doGet(endPoint) {
-        var promise = new Promise((resolve,regect) {
+        var promise = new Promise((resolve,regect) => {
             axios.get(this.address + endPoint).then(result => {
                 resolve(result);
             });
