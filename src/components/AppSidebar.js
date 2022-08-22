@@ -29,8 +29,8 @@ const AppSidebar = () => {
       <CSidebarNav>
         <SimpleBar>
           <AppSidebarNav items={navigation} />
-          <BtnAddEvent/>
         </SimpleBar>
+        <BtnAddEvent/>
       </CSidebarNav>
       <CSidebarToggler
         className="d-none d-lg-flex"
