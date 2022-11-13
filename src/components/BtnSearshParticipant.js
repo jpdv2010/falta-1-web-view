@@ -3,11 +3,10 @@ import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
 import { Link } from 'react-router-dom';
 
-const BtnSearshParticipant = () => {
+const BtnSearshParticipant = ({onClick}) => {
     return (
         <div class="btn-searsh-participant-container">
-            <Link class="btn btn-info btn-circle btn-xl" to="/searsh-event"><CIcon icon={cilSearch} size="lg" /></Link>
-            {/* <button type="button" class="btn btn-info btn-circle btn-xl" onClick={openCreateEvent}><CIcon icon={cilPlus} size="lg" /></button> */}
+            <button type="button" class="btn btn-info btn-circle btn-xl" onClick={event => onClick()}><CIcon icon={cilSearch} size="lg" /></button>
         </div>
     )
 }

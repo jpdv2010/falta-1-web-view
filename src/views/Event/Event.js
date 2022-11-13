@@ -7,34 +7,26 @@ import {
   CCardTitle,
   CCol,
   CRow,
+  CWidgetStatsF,
+  CFormCheck,
+  CFormFeedback
 } from '@coreui/react'
 import { BtnSearshParticipant, DocsExample } from '../../components'
 import { useParams } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { cilUser } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 
 import _events from '../../_events';
+import _users from '../../_users'
 
 const Event = () => {
   const params = useParams()
+  const [show, setShow] = React.useState(false);
 
-  console.log(params);
-
-  // const getPosition = (position) => {
-  //   let p;
-  //   switch(position) {
-  //     case "A":
-  //       p = "Atacante"
-  //       break;
-  //     case "M":
-  //       p = "Meio-Campista"
-  //       break;
-  //     case "D":
-  //       p = "Defensor"
-  //       break;
-  //     default:
-  //       p = "Goleiro";
-  //   }
-  //   return p;
-  // }
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const getColor = (position) => {
     let color;
@@ -72,6 +64,7 @@ const Event = () => {
   }
 
   return (
+    <>
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
@@ -103,7 +96,7 @@ const Event = () => {
                     <CCard color='success' textColor={'white'} className="mb-3">
                       <CCardHeader>Adicionar Participante</CCardHeader>
                       <CCardBody>
-                        <BtnSearshParticipant/>
+                        <BtnSearshParticipant onClick={event => handleShow()}/>
                       </CCardBody>
                     </CCard>
                   </CCol>
@@ -114,6 +107,40 @@ const Event = () => {
         </CCard>
       </CCol>
     </CRow>
+    <Modal aria-labelledby="example-custom-modal-styling-title" dialogClassName="modal-50g" show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Participantes disponíveis</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        {_users.map((item,index) => (
+            <CRow xs={24} sm={12} lg={6}>
+              <CWidgetStatsF
+                className="mb-3"
+                icon={<CIcon width={24} icon={cilUser} size="xl" />}
+                value={<CCol xs={12}>
+                <CFormCheck
+                  type="checkbox"
+                  id="invalidCheck"
+                  label={item.name}
+                  required
+                />
+              </CCol>}
+                color="info"
+              />
+              
+            </CRow>
+        ))}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Fechar
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Adicionar Participante
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   )
 }
 

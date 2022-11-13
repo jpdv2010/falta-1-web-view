@@ -4,10 +4,13 @@ import {
   CContainer,
   CHeader,
   CHeaderDivider,
-  CHeaderToggler
+  CHeaderToggler,
+  CHeaderNav,
+  CNavItem,
+  CNavLink
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilMenu } from '@coreui/icons'
+import { cilMenu,cilExitToApp } from '@coreui/icons'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -22,6 +25,13 @@ const AppHeader = () => {
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
+        <CHeaderNav>
+          <CNavItem>
+            <CNavLink href="#/login">
+              <CIcon icon={cilExitToApp} size="lg" />
+            </CNavLink>
+          </CNavItem>
+        </CHeaderNav>
       </CContainer>
       <CHeaderDivider />
     </CHeader>
