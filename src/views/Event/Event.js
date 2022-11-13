@@ -1,25 +1,14 @@
 import React from 'react'
 import {
-  CButton,
   CCard,
   CCardBody,
-  CCardFooter,
-  CCardGroup,
   CCardHeader,
-  CCardImage,
-  CCardLink,
-  CCardSubtitle,
   CCardText,
   CCardTitle,
-  CListGroup,
-  CListGroupItem,
-  CNav,
-  CNavItem,
-  CNavLink,
   CCol,
   CRow,
 } from '@coreui/react'
-import { DocsExample } from '../../components'
+import { BtnSearshParticipant, DocsExample } from '../../components'
 import { useParams } from 'react-router-dom';
 
 import _events from '../../_events';
@@ -69,21 +58,34 @@ const Event = () => {
     return _events.find(event => event.id == id)[value];
   }
 
+  const getArrayVagas = (qtdParticipantes) => {
+    let size = qtdParticipantes - getValue(params.id, 'participants').length;
+    var vagas = [];
+    for(var i = 0; i < size; i++) {
+      vagas.push({vaga: 'Adicionar Participante'})
+    }
+    return vagas;
+  }
+
+  const getAddressText = (address) => {
+    return address.street + ',' + ' ' + address.number + ', ' + address.district + ' - ' + address.city;
+  }
+
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Evento</strong> <small>{getValue(params.id, 'date')}</small>
+            <strong>Partida</strong> <small>{getValue(params.id, 'date')}</small>
           </CCardHeader>
           <CCardBody>
             <h3>{getValue(params.id, 'name')}</h3>
             <p className="text-medium-emphasis small">
-              {getValue(params.id, 'description')}
+              {getAddressText(getValue(params.id, 'address'))}
             </p>
             <DocsExample href="components/card/#background-and-color">
               <CRow>
-                {getValue(params.id, 'members').map((item, index) => (
+                {getValue(params.id, 'participants').map((item, index) => (
                   <CCol lg={4} key={index}>
                     <CCard color={getColor(item.position)} textColor={'white'} className="mb-3">
                       <CCardHeader>Participante</CCardHeader>
@@ -92,6 +94,16 @@ const Event = () => {
                         <CCardText>
                           Descrição do Jogador.
                         </CCardText>
+                      </CCardBody>
+                    </CCard>
+                  </CCol>
+                ))}
+                {getArrayVagas(getValue(params.id, 'amountVacancies')).map((item, index) => (
+                  <CCol lg={4} key={index}>
+                    <CCard color='success' textColor={'white'} className="mb-3">
+                      <CCardHeader>Adicionar Participante</CCardHeader>
+                      <CCardBody>
+                        <BtnSearshParticipant/>
                       </CCardBody>
                     </CCard>
                   </CCol>

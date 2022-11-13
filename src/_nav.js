@@ -4,7 +4,7 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 const _nav = [
   {
     component: CNavTitle,
-    name: 'Eventos',
+    name: 'Partidas',
   },
   {
     to: '/event/1',

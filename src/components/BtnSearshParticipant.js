@@ -1,0 +1,15 @@
+import React from 'react'
+import CIcon from '@coreui/icons-react'
+import { cilSearch } from '@coreui/icons'
+import { Link } from 'react-router-dom';
+
+const BtnSearshParticipant = () => {
+    return (
+        <div class="btn-searsh-participant-container">
+            <Link class="btn btn-info btn-circle btn-xl" to="/searsh-event"><CIcon icon={cilSearch} size="lg" /></Link>
+            {/* <button type="button" class="btn btn-info btn-circle btn-xl" onClick={openCreateEvent}><CIcon icon={cilPlus} size="lg" /></button> */}
+        </div>
+    )
+}
+
+export default React.memo(BtnSearshParticipant)

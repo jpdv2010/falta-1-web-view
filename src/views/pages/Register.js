@@ -12,9 +12,34 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilLockLocked, cilUser, cilPhone } from '@coreui/icons'
+import ServiceContext from '../../utils/service/ServiceContext'
 
 const Register = () => {
+  const [username, setUsername] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [password2, setPassword2] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let data = {
+      username: username,
+      password: password,
+      role: 'USER',
+      enabled: true,
+      name: name,
+      phone: phone
+  };
+
+  ServiceContext.registerUser(data)
+      .then(res => {
+      }).catch(function (error) {
+          console.log(error);
+      })
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -22,18 +47,25 @@ const Register = () => {
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm>
-                  <h1>Register</h1>
-                  <p className="text-medium-emphasis">Create your account</p>
+                <CForm onSubmit={(event => handleSubmit(event))}>
+                  <h1>Registrar-se</h1>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Username" autoComplete="username" />
+                    <CFormInput placeholder="Usuário" autoComplete="username" value={username} onChange={(event) => {setUsername(event.target?.value)}}/>
                   </CInputGroup>
                   <CInputGroup className="mb-3">
-                    <CInputGroupText>@</CInputGroupText>
-                    <CFormInput placeholder="Email" autoComplete="email" />
+                    <CInputGroupText>
+                      <CIcon icon={cilUser} />
+                    </CInputGroupText>
+                    <CFormInput placeholder="Nome" autoComplete="name" value={name} onChange={(event) => {setName(event.target?.value)}}/>
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilPhone} />
+                    </CInputGroupText>
+                    <CFormInput type="phone" placeholder="Telefone" autoComplete="phone" value={phone} onChange={(event) => {setPhone(event.target?.value)}}/>
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -41,8 +73,10 @@ const Register = () => {
                     </CInputGroupText>
                     <CFormInput
                       type="password"
-                      placeholder="Password"
+                      placeholder="Senha"
                       autoComplete="new-password"
+                      value={password}
+                      onChange={(event) => {setPassword(event.target?.value)}}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -51,12 +85,14 @@ const Register = () => {
                     </CInputGroupText>
                     <CFormInput
                       type="password"
-                      placeholder="Repeat password"
+                      placeholder="Repetir senha"
                       autoComplete="new-password"
+                      value={password2}
+                      onChange={(event) => {setPassword2(event.target?.value)}}
                     />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="success">Create Account</CButton>
+                    <CButton type="submit" color="success">Cadastrar Usuário</CButton>
                   </div>
                 </CForm>
               </CCardBody>

@@ -1,10 +1,10 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
+import { CRow, CSidebar, CCol, CSidebarNav, CTooltip } from '@coreui/react'
 
 import { AppSidebarNav } from './AppSidebarNav'
-import {BtnAddEvent} from './index'
+import { BtnAddEvent, BtnSearshEvent } from './index'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
@@ -27,15 +27,26 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarNav>
-        <SimpleBar>
-          <AppSidebarNav items={navigation} />
-        </SimpleBar>
-        <BtnAddEvent/>
+        <CCol xs={12}>
+          <SimpleBar>
+            <AppSidebarNav items={navigation} />
+          </SimpleBar>
+          <CRow>
+            <CTooltip
+              content="Cadastrar Evento"
+              placement="bottom"
+            >
+              <BtnAddEvent />
+            </CTooltip>
+            <CTooltip
+              content="Pesquisar Evento"
+              placement="bottom"
+            >
+              <BtnSearshEvent />
+            </CTooltip>
+          </CRow>
+        </CCol>
       </CSidebarNav>
-      <CSidebarToggler
-        className="d-none d-lg-flex"
-        onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
-      />
     </CSidebar>
   )
 }

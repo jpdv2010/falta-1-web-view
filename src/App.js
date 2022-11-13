@@ -10,11 +10,16 @@ const loading = (
   </div>
 )
 
+const Login = React.lazy(() => import('./views/pages/Login'))
+const Register = React.lazy(() => import('./views/pages/Register'))
+
 function App() {
   return (
     <HashRouter>
         <Suspense fallback={loading}>
           <Routes>
+            <Route exact path="/login" name="Login Page" element={<Login />} />
+            <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="*" name="Home" element={<DefaultLayout />} />
           </Routes>
         </Suspense>

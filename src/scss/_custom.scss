@@ -17,6 +17,11 @@
     padding-top: 5px;
 }
 
+.btn-searsh-participant-container {
+    padding-left: 44%;
+    padding-top: 10px;
+}
+
 .MuiFormControl-marginNormal {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
@@ -36,7 +41,7 @@
 }
 
 .MuiFormControl-root.MuiTextField-root.MuiFormControl-marginNormal {
-    width: 95%;
+    width: 100%;
     border: 1px solid #b1b7c1;
     background-color: white;
     border-radius: 0.25rem;
@@ -52,4 +57,15 @@ input#date-picker-inline {
     font-family: inherit;
     line-height: 1.5;
     color: var(--cui-input-color, rgba(44, 56, 74, 0.95));
+}
+
+.btn.btn-primary.px-4 {
+    background-color: #3CB371;
+    border-color: #3CB371;
+}
+
+button.btn.btn-success {
+    background-color: #3CB371;
+    border-color: #3CB371;
+    color: #FFF;
 }
