@@ -15,14 +15,17 @@ class ServiceContext {
     }
 
     static registerMatch = (match) => {
+        this.getToken();
         return this.doPost('match', match);
     }
 
     static getMatch = () => {
+        this.getToken();
         return this.doGet('match');
     }
 
     static getMatch = (matchId) => {
+        this.getToken();
         return this.doGet('match/' + matchId);
     }
 
@@ -43,6 +46,13 @@ class ServiceContext {
             });
         });
         return promise;
+    }
+
+    static getToken() {
+        const token = localStorage.getItem('access-token');
+        if(null != token) {
+            this.headers["Authorization"] = "Bearer " + token;
+        }
     }
 
 }
