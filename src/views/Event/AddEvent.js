@@ -13,14 +13,12 @@ import {
     CFormLabel
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilAmericanFootball, cilUser, cilCalendar, cilGroup } from '@coreui/icons'
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import ServiceContext from '../../utils/service/ServiceContext'
-import { DocsExample } from '../../components'
 
 const AddEvent = () => {
     const [schedule, setSchedule] = React.useState(undefined);
@@ -69,7 +67,7 @@ const AddEvent = () => {
                         <CFormLabel htmlFor="inputEmail4">Nome</CFormLabel>
                         <CFormInput placeholder="Nome" autoComplete="name" type="text" onChange={(event) => {setMatchName(event.target?.value)}} value={matchName} />
                     </CCol>
-                    <CCol md={6}>
+                    <CCol md={3}>
                         <CFormLabel htmlFor="inputPassword4">Data</CFormLabel>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
@@ -86,7 +84,7 @@ const AddEvent = () => {
                             />
                         </MuiPickersUtilsProvider>
                     </CCol>
-                    <CCol xs={6}>
+                    <CCol xs={3}>
                         <CFormLabel htmlFor="inputAddress">Quantidade de Participantes</CFormLabel>
                         <CFormInput
                             type="number"
