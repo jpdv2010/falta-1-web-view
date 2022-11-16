@@ -31,6 +31,7 @@ const Login = () => {
             password: password
         };
 
+        //TODO: remover linha 35 quando o acesso a api estiver funcionando
         navigate('/dashboard');
         
         ServiceContext.login(data)
@@ -71,9 +72,9 @@ const Login = () => {
                                             />
                                         </CInputGroup>
                                         <CRow>
-                                            <CCol xs={2}>
+                                            <CCol xs={4}>
                                                 <CButton color="primary" type="submit" className="px-4">
-                                                    Login
+                                                    Entrar
                                                 </CButton>
                                             </CCol>
                                             <CCol xs={6}>

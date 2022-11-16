@@ -9,15 +9,18 @@ import {
   CRow,
   CWidgetStatsF,
   CFormCheck,
-  CFormFeedback
+  CInputGroup,
+  CFormInput,
+  CButton
 } from '@coreui/react'
 import { BtnSearshParticipant, DocsExample } from '../../components'
 import { useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { cilUser } from '@coreui/icons'
+import { cilUser, cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
+//TODO alterar busca de dados para utilizar as informações da api
 import _events from '../../_events';
 import _users from '../../_users'
 
@@ -47,6 +50,7 @@ const Event = () => {
   }
 
   const getValue = (id, value) => {
+    //TODO buscar eventos na api
     return _events.find(event => event.id == id)[value];
   }
 
@@ -112,6 +116,16 @@ const Event = () => {
           <Modal.Title>Participantes disponíveis</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+        <CInputGroup className="mb-3">
+            <CFormInput
+              placeholder="Pesquisar Usuário"
+              aria-label="Pesquisar Usuário"
+              aria-describedby="button-addon2"
+            />
+            <CButton type="button" color="secondary" variant="outline" id="button-addon2">
+                <CIcon icon={cilSearch}/>
+            </CButton>
+        </CInputGroup>
         {_users.map((item,index) => (
             <CRow xs={24} sm={12} lg={6}>
               <CWidgetStatsF
