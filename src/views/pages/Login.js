@@ -78,13 +78,13 @@ const Login = () => {
                                         <CRow>
                                             <CCol xs={4}>
                                                 <CButton color="primary" type="submit" className="px-4">
-                                                    Entrar
+                                                    Entrar 
                                                 </CButton>
                                             </CCol>
                                             <CCol xs={6}>
                                                 <Link to="/register">
                                                     <CButton color="info" className="px-4" tabIndex={-1}>
-                                                        Registre-se!
+                                                        Cadastro
                                                     </CButton>
                                                 </Link>
                                             </CCol>
