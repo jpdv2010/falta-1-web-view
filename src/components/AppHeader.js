@@ -31,7 +31,7 @@ const AppHeader = () => {
         </CHeaderToggler>
         <CHeaderNav>
           <CNavItem>
-            <CNavLink>
+            <CNavLink style={{cursor: 'pointer'}}>
               {!hasNotification ? <CIcon icon={cilBell} size="lg" /> :
                 <OverlayTrigger
                   trigger="click"
