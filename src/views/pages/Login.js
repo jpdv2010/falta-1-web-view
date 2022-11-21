@@ -34,13 +34,17 @@ const Login = () => {
         //TODO: remover linha 35 quando o acesso a api estiver funcionando
         navigate('/dashboard');
         
-        ServiceContext.login(data)
-            .then(res => {
+        let response = ServiceContext.login(data);
+
+        if(response) {
+            response.then(res => {
                 localStorage.setItem('access-token', res.data.access_token);
                 navigate('/dashboard');
             }).catch(function (error) {
                 console.log(error);
             });
+        }
+        
         
     }
 

@@ -30,12 +30,28 @@ class ServiceContext {
     }
 
     static doPost(endPoint, content) {
+        // var promise = new Promise((resolve,regect) => {
+        //     axios.post(this.address + 'api/' + endPoint, content, { headers: this.headers }).then(result => {
+        //         resolve(result);
+        //     });
+        // });
+        // return promise;
+
         var promise = new Promise((resolve,regect) => {
-            axios.post(this.address + 'api/' + endPoint, content, { headers: this.headers }).then(result => {
-                resolve(result);
-            });
+            fetch(this.address + 'api/' + endPoint, {
+                method: 'POST',
+                body: JSON.stringify(content),
+                headers: {
+                    'Accept': 'application/json, text/plain',
+                    'Content-Type': 'application/json;'
+                }
+            }).then(response => {
+                resolve(response);
+            })
+
         });
         return promise;
+
         
     }
     
