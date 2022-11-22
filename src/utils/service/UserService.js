@@ -1,20 +1,21 @@
 import ServiceContext from "./ServiceContext";
 
-class UserService {
-    static context = ServiceContext;
-    
-    static getByUsername = (username) => {
-        this.context.getToken();
-        return this.context.doGet('user/find-by-username/' + username);
-    }
+const context = ServiceContext;
 
-    static registerUser = (user) => {
-        return this.context.doPost('user', user);
-    }
+export const getUserByUsername = (username) => {
+    context.getToken();
+    return context.doGet('user/find-by-username/' + username);
+ };
+ 
+ export const registerUser = () => {
+    return context.doPost('user', user);
+ };
 
-    static getAll = () => {
-        return this.context.doGet('user');
-    }
-}
+ export const getAllUsers = () => {
+    context.getToken();
+    return context.doGet('user');
+ };
 
-export default UserService
+ export const login = (jsonLogin) => {
+    return context.doPost('login', jsonLogin);
+ }

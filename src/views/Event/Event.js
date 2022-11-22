@@ -21,8 +21,8 @@ import { cilUser, cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 //TODO alterar busca de dados para utilizar as informações da api
-import MatchService from '../../utils/service/MatchService';
-import UserService from '../../utils/service/UserService';
+import { getMatchById } from '../../utils/service/MatchService';
+import { getAll } from '../../utils/service/UserService';
 import ParticipantService from '../../utils/service/ParticipantService';
 
 const Event = () => {
@@ -50,9 +50,9 @@ const Event = () => {
   }
 
   const handleShow = (id, value) => {
-    UserService.getAll().then(result => {
+    getAllUsers().then(result => {
       let users = result.data;
-      let currentUserName = localStorage.getItem('user-name');  
+      let currentUserName = localStorage.getItem('user-name');
       let index = users.find(user => user.username == currentUserName);
       if(index != -1) {
         users.splice(index, 1);
@@ -64,13 +64,13 @@ const Event = () => {
   }
 
   const getMatch = () => {
-    MatchService.getMatchById(params.id).then(result => {
+    getMatchById(params.id).then(result => {
       setMatch(result.data);
     });
   }
 
   useEffect(() => {
-    MatchService.getMatchById(params.id).then(result => {
+    getMatchById(params.id).then(result => {
       setMatch(result.data);
     });
   });

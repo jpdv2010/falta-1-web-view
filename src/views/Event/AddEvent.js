@@ -14,8 +14,8 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import MatchService from '../../utils/service/MatchService';
-import UserService from '../../utils/service/UserService';
+import { registerMatch } from '../../utils/service/MatchService';
+import { getByUsername } from '../../utils/service/UserService';
 import { useNavigate } from 'react-router-dom';
 
 const AddEvent = () => {
@@ -36,7 +36,7 @@ const AddEvent = () => {
         
         let currentUserName = localStorage.getItem('user-name');        
 
-        UserService.getByUsername(currentUserName).then(response => {
+        getUserByUsername(currentUserName).then(response => {
             let data = {
                 matchName: matchName,
                 schedule: schedule,
@@ -53,7 +53,7 @@ const AddEvent = () => {
                 }
             };
     
-            MatchService.registerMatch(data)
+            registerMatch(data)
                 .then(res => {
                     navigate('/event/' + res.data.id);
                 }).catch(function (error) {

@@ -1,8 +1,8 @@
 import React from 'react'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
-import {useLocation, useNavigate} from 'react-router-dom';
-import UserService from '../utils/service/UserService'
-import MatchService from '../utils/service/MatchService'
+import {useNavigate} from 'react-router-dom';
+import { getUserByUsername } from '../utils/service/UserService'
+import { getNavigation } from '../utils/service/MatchService'
 import { useEffect } from 'react';
 
 const DefaultLayout = () => {
@@ -11,10 +11,10 @@ const DefaultLayout = () => {
 
   useEffect(() => {
     let currentUserName = localStorage.getItem('user-name');        
-    let responseUser = UserService.getByUsername(currentUserName);
+    let responseUser = getUserByUsername(currentUserName);
     if(responseUser) {
         responseUser.then(userRes => {
-            MatchService.getNavigation(userRes.data.id).then(nav => {
+            getNavigation(userRes.data.id).then(nav => {
               setNavigation(nav);
             })
         })

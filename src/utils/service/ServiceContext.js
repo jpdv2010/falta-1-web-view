@@ -5,11 +5,7 @@ class ServiceContext {
     static headers = {
           "Content-type":"application/json"
         };
-
-    static login = (jsonLogin) => {
-        return this.doPost('login', jsonLogin);
-    }
-
+        
     static doPost(endPoint, content) {
           var promise = new Promise((resolve,regect) => {
             axios.post(this.address + 'api/' + endPoint, content, {
