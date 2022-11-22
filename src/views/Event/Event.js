@@ -17,7 +17,7 @@ import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant } from '../../c
 import { useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { cilUser, cilSearch } from '@coreui/icons'
+import { cilUser, cilSearch, cilBadge } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 //TODO alterar busca de dados para utilizar as informações da api
@@ -79,7 +79,7 @@ const Event = () => {
 
   const getArrayVagas = (qtdParticipantes) => {
     if (match) {
-      let size = qtdParticipantes - match.participants.length;
+      let size = qtdParticipantes - match.participants.length -1;
       var vagas = [];
       for (var i = 0; i < size; i++) {
         vagas.push({ vaga: 'Adicionar Participante' })
@@ -151,6 +151,18 @@ const Event = () => {
               </p>
               <DocsExample href="components/card/#background-and-color">
                 <CRow>
+                  <CCol lg={4}>
+                    <CCard color={'info'} textColor={'white'} className="mb-3">
+                      <CCardHeader>{'Você'}</CCardHeader>
+                      <CCardBody>
+                        <CCardText style={{padding: '8px'}}>
+                          <div class="btn-searsh-participant-container">
+                            <CIcon icon={cilBadge} size="xl"/>
+                          </div>
+                        </CCardText>
+                      </CCardBody>
+                    </CCard>
+                  </CCol>
                   {match?.participants?.map((item, index) => (
                     <CCol lg={4} key={index}>
                       <CCard color={getColor(item.status)} textColor={'white'} className="mb-3">
