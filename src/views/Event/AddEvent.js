@@ -55,7 +55,7 @@ const AddEvent = () => {
     
             MatchService.registerMatch(data)
                 .then(res => {
-                    navigate('/dashboard', {data: {add: {id: res.data.id, name: res.data.matchName}}});
+                    navigate('/event/' + res.data.id);
                 }).catch(function (error) {
                     console.log(error);
                 })

@@ -1,25 +1,25 @@
 import React from 'react'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import UserService from '../utils/service/UserService'
 import MatchService from '../utils/service/MatchService'
 import { useEffect } from 'react';
 
 const DefaultLayout = () => {
-  const { state } = useLocation();
-  const [navigation, setNavigation] = React.useState(state?.nav);
+  const [navigation, setNavigation] = React.useState(undefined);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let currentUserName = localStorage.getItem('user-name');        
     let responseUser = UserService.getByUsername(currentUserName);
     if(responseUser) {
         responseUser.then(userRes => {
-            localStorage.setItem('user-name', userRes.data.username);
             MatchService.getNavigation(userRes.data.id).then(nav => {
-                state?.nav? setNavigation(state.nav) : setNavigation(navigation);
-                state?.addNav? navigation.push(state.add) : () => {};
+              setNavigation(nav);
             })
         })
+    } else {
+      navigate('/login');
     }
   });
 

@@ -51,12 +51,26 @@ const Login = () => {
                     })
                 }
             }).catch(function (error) {
-                
+                if(error.response.status == 401) {
+                    alert("Usuário ou senha incorretos!", 'danger')
+                }
                 console.log(error);
             });
-        }
-        
-        
+        }   
+    }
+
+    const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+
+    const alert = (message, type) => {
+    const wrapper = document.createElement('div')
+    wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+    ].join('')
+
+    alertPlaceholder.append(wrapper)
     }
 
     return (
@@ -102,6 +116,7 @@ const Login = () => {
                                         </CRow>
                                     </CForm>
                                 </CCardBody>
+                                <div id="liveAlertPlaceholder"></div>
                             </CCard>
                         </CCardGroup>
                     </CCol>
