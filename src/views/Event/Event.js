@@ -21,9 +21,9 @@ import { cilUser, cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 //TODO alterar busca de dados para utilizar as informações da api
-import { getMatchById } from '../../utils/service/MatchService';
+import { getMatchById, updateMatch } from '../../utils/service/MatchService';
 import { getAllUsers } from '../../utils/service/UserService';
-import ParticipantService from '../../utils/service/ParticipantService';
+import { deleteParticipant, registerParticipant } from '../../utils/service/ParticipantService';
 
 const Event = () => {
   const [match, setMatch] = React.useState(undefined);
@@ -102,7 +102,7 @@ const Event = () => {
           status: 0
         };
 
-        ParticipantService.registerParticipant(participant).then(result => {
+        registerParticipant(participant).then(result => {
           match.participants.push(result.data);
           resolve(match);
         });
@@ -110,7 +110,7 @@ const Event = () => {
     });
 
     promise.then(match => {
-      MatchService.update(match).then(result => {
+      updateMatch(match).then(result => {
         setShow(false);
         setSelectedUsers([]);
         getMatch();
@@ -128,8 +128,8 @@ const Event = () => {
     }
   }
 
-  const deleteParticipant = (id) => {
-    ParticipantService.delete(id).then(result => {
+  const clickDeleteParticipant = (id) => {
+    deleteParticipant(id).then(result => {
       getMatch();
     });
   }
@@ -155,7 +155,7 @@ const Event = () => {
                         <CCardHeader>{item.status == 'PENDENT'? item.name + ' (Pendente)' : item.name}</CCardHeader>
                         <CCardBody>
                           <CCardText>
-                              <BtnDeleteParticipant onClick={event => deleteParticipant(item.id)} />
+                              <BtnDeleteParticipant onClick={event => clickDeleteParticipant(item.id)} />
                           </CCardText>
                         </CCardBody>
                       </CCard>

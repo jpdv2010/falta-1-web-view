@@ -1,18 +1,13 @@
 import ServiceContext from "./ServiceContext";
 
-class ParticipantService {
-    static context = ServiceContext;
+const context = ServiceContext;
 
-    static registerParticipant = (participant) => {
-        this.context.getToken();
-        return this.context.doPost('participant', participant);
-    }
-
-    static delete = (id) => {
-        this.context.getToken();
-        return this.context.doDelete('participant', id);
-    }
-
+export const registerParticipant = (participant) => {
+    context.getToken();
+    return context.doPost('participant', participant);
 }
 
-export default ParticipantService
+export const deleteParticipant = (id) => {
+    context.getToken();
+    return context.doDelete('participant', id);
+}

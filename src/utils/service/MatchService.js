@@ -1,3 +1,4 @@
+import { fi } from "date-fns/locale";
 import ServiceContext, { getToken } from "./ServiceContext";
 
 const context = ServiceContext;
@@ -45,7 +46,29 @@ export const getMatchNavigation = (matches) => {
     return navigation;
 }
 
-export const update = (match) => {
+export const getMatchPage = (filter) => {
+    context.getToken();
+    let filterString = '';
+    if(filter.schedule) {
+        filterString += 'schedule=' + filter.schedule;
+    }
+    if(filterString != '') {
+        filterString += '&';
+    }
+    if(filter.sport) {
+        filterString += 'sport=' + filter.sport;
+    }
+    if(filterString != '') {
+        filterString += '&';
+    }
+    if(filter.matchName) {
+        filterString += 'matchName=' + filter.matchName;
+    }
+
+    return context.doGet('match/page?' + filterString);
+}
+
+export const updateMatch = (match) => {
     context.getToken();
     return context.doPut('match', match);
 }

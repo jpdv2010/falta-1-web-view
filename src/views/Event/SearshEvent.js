@@ -13,17 +13,18 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import CIcon from '@coreui/icons-react';
 import { cilFilter } from '@coreui/icons'
+import { getMatchPage, updateMatch } from '../../utils/service/MatchService';
+import { getUserByUsername } from '../../utils/service/UserService';
+import { registerParticipant } from '../../utils/service/ParticipantService';
+import { useNavigate } from 'react-router-dom';
 
 const SearshEvent = () => {
-    const [filter, setFilter] = React.useState({});
     const [filtered, setFiltered] = React.useState(false);
     const [sport, setSport] = React.useState(undefined);
-    const [city, setCity] = React.useState(undefined);
+    const [matchName, setMatchName] = React.useState(undefined);
     const [schedule, setSchedule] = React.useState(undefined);
-
-    const getEvents = () => {
-        return _events;
-    }
+    const [events, setEvents] = React.useState(undefined);
+    const navigate = useNavigate();
 
     const getVagasRestantes = (item) => {
         let size = item.amountVacancies - item.participants.length;
@@ -33,17 +34,49 @@ const SearshEvent = () => {
     const handleSubmit = () => {
         let filter = {
             sport: sport,
-            city: city,
+            matchName: matchName,
             schedule: schedule
         };
-        setFilter(filter);
 
-        setFiltered(true);
+        getMatchPage(filter).then(result => {
+            setEvents(result.data);
+            setFiltered(true);
+        })
+        
+
     }
 
     const gotoFilter = () => {
-        setFilter({});
+        setSchedule(undefined);
+        setMatchName(undefined);
+        setSport(undefined);
         setFiltered(false);
+    }
+
+    const joinMatch = (match) => {
+        let currentUserName = localStorage.getItem('user-name');
+        getUserByUsername(currentUserName).then(result => {
+            var promise = new Promise((resolve, regect) => {
+                  let participant = {
+                    name: result.data.name,
+                    phone: result.data.phone,
+                    match: match,
+                    status: 1
+                  };
+          
+                  registerParticipant(participant).then(result => {
+                    match.participants.push(result.data);
+                    resolve(match);
+                  });
+              });
+          
+              promise.then(match => {
+                updateMatch(match).then(result => {
+                    navigate('/event/' + match.id);
+                });
+              });
+        });
+
     }
 
     return (
@@ -73,17 +106,17 @@ const SearshEvent = () => {
                             <CFormLabel htmlFor="inputState">Esporte</CFormLabel>
                             <CFormSelect id="inputGroupSelect01" onChange={(event) => { setSport(event.target?.value) }} value={sport} >
                                 <option>Esporte...</option>
-                                <option value="FUTEBOL">Futebol</option>
-                                <option value="VOLEI">Vôlei</option>
-                                <option value="BEACH TENNIS">Beach Tenis</option>
-                                <option value="BASQUETE">Basquete</option>
+                                <option value="SOCCER">Futebol</option>
+                                <option value="VOLLEYBALL">Vôlei</option>
+                                <option value="BEACH_TENNIS">Beach Tenis</option>
+                                <option value="BASKETBALL">Basquete</option>
                                 <option value="HANDBALL">Handball</option>
-                                <option value="TÊNIS">Tênis</option>
+                                <option value="TENNIS">Tênis</option>
                             </CFormSelect>
                         </CCol>
                         <CCol md={6}>
-                            <CFormLabel htmlFor="inputEmail4">Cidade</CFormLabel>
-                            <CFormInput placeholder="Cidade" autoComplete="city" type="text" onChange={(event) => { setCity(event.target?.value) }} value={city} />
+                            <CFormLabel htmlFor="inputEmail4">Nome</CFormLabel>
+                            <CFormInput placeholder="Nome" autoComplete="matchName" type="text" onChange={(event) => { setMatchName(event.target?.value) }} value={matchName} />
                         </CCol>
                         <CCol xs={12}>
                             <CButton type="submit">Filtrar</CButton>
@@ -100,18 +133,18 @@ const SearshEvent = () => {
                 </CRow> : <></>
                 }
                 <div style={{paddingTop: '5px'}}/>
-                {getEvents().map((item, index) => (
+                {events?.map((item, index) => (
                     <CCol>
                         <CCard className="w-100">
                             <CCardBody>
-                                <CCardTitle>{item.name}</CCardTitle>
+                                <CCardTitle>{item.matchName}</CCardTitle>
                                 <CRow>
                                     <CCol>
                                         <CCardText>
                                             Vagas restantes: {getVagasRestantes(item)}
                                         </CCardText>
                                         <CCardText>
-                                            Data:  {item.date}
+                                            Data:  {item.schedule}
                                         </CCardText>
                                     </CCol>
                                     <CCol>
@@ -123,7 +156,7 @@ const SearshEvent = () => {
                                         </CCardText>
                                     </CCol>
                                 </CRow>
-                                <CButton href="#">Juntar-se ao Evento</CButton>
+                                <CButton onClick={event => joinMatch(item)}>Juntar-se ao Evento</CButton>
                             </CCardBody>
                         </CCard>
                     </CCol>
