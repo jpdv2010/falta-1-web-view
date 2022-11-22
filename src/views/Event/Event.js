@@ -22,7 +22,7 @@ import CIcon from '@coreui/icons-react'
 
 //TODO alterar busca de dados para utilizar as informações da api
 import { getMatchById } from '../../utils/service/MatchService';
-import { getAll } from '../../utils/service/UserService';
+import { getAllUsers } from '../../utils/service/UserService';
 import ParticipantService from '../../utils/service/ParticipantService';
 
 const Event = () => {
