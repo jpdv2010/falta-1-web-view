@@ -13,7 +13,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilPhone } from '@coreui/icons'
-import UserService from '../../utils/service/UserService'
+import { registerUser } from '../../utils/service/UserService'
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
@@ -35,7 +35,7 @@ const Register = () => {
       phone: phone
   };
 
-  UserService.registerUser(data)
+  registerUser(data)
       .then(res => {
         navigate('/login');
       }).catch(function (error) {
