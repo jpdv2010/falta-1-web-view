@@ -31,6 +31,7 @@ const Event = () => {
   const [show, setShow] = React.useState(false);
   const [users, setUsers] = React.useState([]);
   const [selectedUsers, setSelectedUsers] = React.useState([]);
+  const [currentUsername, setCurrentUserName] = React.useState(undefined);
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -52,8 +53,7 @@ const Event = () => {
   const handleShow = (id, value) => {
     getAllUsers().then(result => {
       let users = result.data;
-      let currentUserName = localStorage.getItem('user-name');
-      let index = users.find(user => user.username == currentUserName);
+      let index = users.find(user => user.username == currentUsername);
       if(index != -1) {
         users.splice(index, 1);
       }
@@ -70,6 +70,8 @@ const Event = () => {
   }
 
   useEffect(() => {
+    setCurrentUserName(localStorage.getItem('user-name'));
+    
     getMatchById(params.id).then(result => {
       setMatch(result.data);
     });
@@ -155,13 +157,13 @@ const Event = () => {
                         <CCardHeader>{item.status == 'PENDENT'? item.name + ' (Pendente)' : item.name}</CCardHeader>
                         <CCardBody>
                           <CCardText>
-                              <BtnDeleteParticipant onClick={event => clickDeleteParticipant(item.id)} />
+                              {match?.creator?.username == currentUsername? <BtnDeleteParticipant onClick={event => clickDeleteParticipant(item.id)}/> : <></>}
                           </CCardText>
                         </CCardBody>
                       </CCard>
                     </CCol>
                   ))}
-                  {getArrayVagas(match?.amountVacancies)?.map((item, index) => (
+                  {match?.creator?.username == currentUsername? getArrayVagas(match?.amountVacancies)?.map((item, index) => (
                     <CCol lg={4} key={index}>
                       <CCard color='success' textColor={'white'} className="mb-3">
                         <CCardHeader>Adicionar Participante</CCardHeader>
@@ -170,7 +172,7 @@ const Event = () => {
                         </CCardBody>
                       </CCard>
                     </CCol>
-                  ))}
+                  )) : <></>}
                 </CRow>
               </DocsExample>
             </CCardBody>
