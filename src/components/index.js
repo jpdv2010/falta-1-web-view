@@ -5,6 +5,7 @@ import AppHeader from './AppHeader'
 import BtnAddEvent from './BtnAddEvent'
 import BtnSearshEvent from './BtnSearshEvent'
 import BtnSearshParticipant from './BtnSearshParticipant'
+import BtnDeleteParticipant from './BtnDeleteParticipant'
 
 export {
   AppContent,
@@ -13,5 +14,6 @@ export {
   AppHeader,
   BtnAddEvent,
   BtnSearshEvent,
-  BtnSearshParticipant
+  BtnSearshParticipant,
+  BtnDeleteParticipant
 }

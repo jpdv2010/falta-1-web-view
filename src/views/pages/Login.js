@@ -17,6 +17,8 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom';
 import ServiceContext from '../../utils/service/ServiceContext'
+import UserService from '../../utils/service/UserService'
+import MatchService from '../../utils/service/MatchService'
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -32,15 +34,24 @@ const Login = () => {
         };
 
         //TODO: remover linha 35 quando o acesso a api estiver funcionando
-        navigate('/dashboard');
+        //navigate('/dashboard');
         
         let response = ServiceContext.login(data);
 
         if(response) {
             response.then(res => {
-                localStorage.setItem('access-token', res.data.access_token);
-                navigate('/dashboard');
+                localStorage.setItem('access-token', res.data.token);
+                let responseUser = UserService.getByUsername(username);
+                if(responseUser) {
+                    responseUser.then(userRes => {
+                        localStorage.setItem('user-name', userRes.data.username);
+                        MatchService.getNavigation(userRes.data.id).then(nav => {
+                            navigate('/dashboard', {state: {nav: nav}});
+                        })
+                    })
+                }
             }).catch(function (error) {
+                
                 console.log(error);
             });
         }

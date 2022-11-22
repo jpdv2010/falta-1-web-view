@@ -7,62 +7,68 @@ class ServiceContext {
         };
 
     static login = (jsonLogin) => {
-        this.doPost('login', jsonLogin)
-    }
-
-    static registerUser = (user) => {
-        return this.doPost('user', user);
-    }
-
-    static registerMatch = (match) => {
-        this.getToken();
-        return this.doPost('match', match);
-    }
-
-    static getMatch = () => {
-        this.getToken();
-        return this.doGet('match');
-    }
-
-    static getMatch = (matchId) => {
-        this.getToken();
-        return this.doGet('match/' + matchId);
+        return this.doPost('login', jsonLogin);
     }
 
     static doPost(endPoint, content) {
-        // var promise = new Promise((resolve,regect) => {
-        //     axios.post(this.address + 'api/' + endPoint, content, { headers: this.headers }).then(result => {
-        //         resolve(result);
-        //     });
-        // });
-        // return promise;
-
-        var promise = new Promise((resolve,regect) => {
-            fetch(this.address + 'api/' + endPoint, {
-                method: 'POST',
-                body: JSON.stringify(content),
-                headers: {
-                    'Accept': 'application/json, text/plain',
-                    'Content-Type': 'application/json;'
-                }
-            }).then(response => {
+          var promise = new Promise((resolve,regect) => {
+            axios.post(this.address + 'api/' + endPoint, content, {
+                headers: this.headers
+              })
+              .then((response) => {
                 resolve(response);
-            })
-
+              })
+              .catch((error) => {
+                regect(error);
+              });
         });
         return promise;
-
-        
     }
     
-    static doGet(endPoint, headers) {
+    static doGet(endPoint) {
         var promise = new Promise((resolve,regect) => {
-            axios.get(this.address + endPoint, this.config).then(result => {
+            axios.get(this.address + 'api/' + endPoint, {
+                headers: this.headers
+              })
+            .then(result => {
                 resolve(result);
-            });
+            })
+            .catch(error => {
+                regect(error);
+            })
         });
         return promise;
     }
+
+    static doPut(endPoint, content) {
+        var promise = new Promise((resolve,regect) => {
+            axios.put(this.address + 'api/' + endPoint, content, {
+                headers: this.headers
+              })
+              .then((response) => {
+                resolve(response);
+              })
+              .catch((error) => {
+                regect(error);
+              });
+        });
+        return promise;
+    }
+
+    static doDelete(endPoint, id) {
+      var promise = new Promise((resolve,regect) => {
+          axios.delete(this.address + 'api/' + endPoint + '/' + id, {
+              headers: this.headers
+            })
+            .then((response) => {
+              resolve(response);
+            })
+            .catch((error) => {
+              regect(error);
+            });
+      });
+      return promise;
+  }
 
     static getToken() {
         const token = localStorage.getItem('access-token');

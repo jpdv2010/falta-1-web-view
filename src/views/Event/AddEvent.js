@@ -1,14 +1,10 @@
 import React from 'react'
 import {
     CButton,
-    CCard,
     CCardBody,
     CCol,
-    CContainer,
     CForm,
     CFormInput,
-    CInputGroup,
-    CInputGroupText,
     CFormSelect,
     CFormLabel
 } from '@coreui/react'
@@ -18,7 +14,9 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import ServiceContext from '../../utils/service/ServiceContext'
+import MatchService from '../../utils/service/MatchService';
+import UserService from '../../utils/service/UserService';
+import { useNavigate } from 'react-router-dom';
 
 const AddEvent = () => {
     const [schedule, setSchedule] = React.useState(undefined);
@@ -31,31 +29,37 @@ const AddEvent = () => {
     const [number, setNumber] = React.useState(undefined);
     const [zipCode, setZip] = React.useState(undefined);
     const [complement, setComplement] = React.useState(undefined);
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        let data = {
-            matchName: matchName,
-            schedule: schedule,
-            creator: {},
-            amountVacancies: amountVacancies,
-            sport: sport,
-            address: {
-                city: city,
-                district: district,
-                street: street,
-                number: number,
-                zipCode: zipCode,
-                complement: complement
-            }
-        };
+        let currentUserName = localStorage.getItem('user-name');        
 
-        ServiceContext.registerMatch(data)
-            .then(res => {
-            }).catch(function (error) {
-                console.log(error);
-            })
+        UserService.getByUsername(currentUserName).then(response => {
+            let data = {
+                matchName: matchName,
+                schedule: schedule,
+                creator: response.data,
+                amountVacancies: amountVacancies,
+                sport: sport,
+                address: {
+                    city: city,
+                    district: district,
+                    street: street,
+                    number: number,
+                    zipCode: zipCode,
+                    complement: complement
+                }
+            };
+    
+            MatchService.registerMatch(data)
+                .then(res => {
+                    navigate('/dashboard', {data: {add: {id: res.data.id, name: res.data.matchName}}});
+                }).catch(function (error) {
+                    console.log(error);
+                })
+        })
     }
 
     return (
@@ -96,12 +100,12 @@ const AddEvent = () => {
                         <CFormLabel htmlFor="inputState">Esporte</CFormLabel>
                         <CFormSelect id="inputGroupSelect01" onChange={(event) => {setSport(event.target?.value)}} value={sport} >
                             <option>Esporte...</option>
-                            <option value="FUTEBOL">Futebol</option>
-                            <option value="VOLEI">Vôlei</option>
-                            <option value="BEACH TENNIS">Beach Tenis</option>
-                            <option value="BASQUETE">Basquete</option>
-                            <option value="HANDBALL">Handball</option>
-                            <option value="TÊNIS">Tênis</option>
+                            <option value="1">Futebol</option>
+                            <option value="2">Vôlei</option>
+                            <option value="4">Beach Tenis</option>
+                            <option value="5">Basquete</option>
+                            <option value="6">Handball</option>
+                            <option value="7">Tênis</option>
                         </CFormSelect>
                     </CCol>
                     <CCol md={6}>

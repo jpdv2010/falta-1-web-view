@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -13,7 +13,7 @@ import {
   CFormInput,
   CButton
 } from '@coreui/react'
-import { BtnSearshParticipant, DocsExample } from '../../components'
+import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant } from '../../components'
 import { useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -21,27 +21,27 @@ import { cilUser, cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 //TODO alterar busca de dados para utilizar as informações da api
-import _events from '../../_events';
-import _users from '../../_users'
+import MatchService from '../../utils/service/MatchService';
+import UserService from '../../utils/service/UserService';
+import ParticipantService from '../../utils/service/ParticipantService';
 
 const Event = () => {
+  const [match, setMatch] = React.useState(undefined);
   const params = useParams()
   const [show, setShow] = React.useState(false);
+  const [users, setUsers] = React.useState([]);
+  const [selectedUsers, setSelectedUsers] = React.useState([]);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setSelectedUsers([]);
+    setShow(false);
+  }
 
   const getColor = (position) => {
     let color;
-    switch(position) {
-      case "A":
-        color = 'danger'
-        break;
-      case "M":
+    switch (position) {
+      case "PENDENT":
         color = 'warning'
-        break;
-      case "D":
-        color = 'success'
         break;
       default:
         color = 'info';
@@ -49,107 +49,174 @@ const Event = () => {
     return color;
   }
 
-  const getValue = (id, value) => {
-    //TODO buscar eventos na api
-    return _events.find(event => event.id == id)[value];
+  const handleShow = (id, value) => {
+    UserService.getAll().then(result => {
+      let users = result.data;
+      let currentUserName = localStorage.getItem('user-name');  
+      let index = users.find(user => user.username == currentUserName);
+      if(index != -1) {
+        users.splice(index, 1);
+      }
+      
+      setUsers(users);
+      setShow(true);
+    });
   }
 
+  const getMatch = () => {
+    MatchService.getMatchById(params.id).then(result => {
+      setMatch(result.data);
+    });
+  }
+
+  useEffect(() => {
+    MatchService.getMatchById(params.id).then(result => {
+      setMatch(result.data);
+    });
+  });
+
   const getArrayVagas = (qtdParticipantes) => {
-    let size = qtdParticipantes - getValue(params.id, 'participants').length;
-    var vagas = [];
-    for(var i = 0; i < size; i++) {
-      vagas.push({vaga: 'Adicionar Participante'})
+    if (match) {
+      let size = qtdParticipantes - match.participants.length;
+      var vagas = [];
+      for (var i = 0; i < size; i++) {
+        vagas.push({ vaga: 'Adicionar Participante' })
+      }
+      return vagas;
     }
-    return vagas;
   }
 
   const getAddressText = (address) => {
-    return address.street + ',' + ' ' + address.number + ', ' + address.district + ' - ' + address.city;
+    if (address) {
+      return address.street + ',' + ' ' + address.number + ', ' + address.district + ' - ' + address.city;
+    }
+  }
+
+  const handleAddParticipant = () => {
+    var promise = new Promise((resolve, regect) => {
+      selectedUsers.forEach(selectedUser => {
+        let participant = {
+          name: selectedUser.name,
+          phone: selectedUser.phone,
+          match: match,
+          status: 0
+        };
+
+        ParticipantService.registerParticipant(participant).then(result => {
+          match.participants.push(result.data);
+          resolve(match);
+        });
+      });
+    });
+
+    promise.then(match => {
+      MatchService.update(match).then(result => {
+        setShow(false);
+        setSelectedUsers([]);
+        getMatch();
+      });
+    });
+  }
+
+  const selectUser = (value, item) => {
+    console.log(value);
+    if (value.currentTarget.checked) {
+      selectedUsers.push(item);
+    } else {
+      const index = selectedUsers.indexOf(item)
+      selectedUsers.splice(index, 1)
+    }
+  }
+
+  const deleteParticipant = (id) => {
+    ParticipantService.delete(id).then(result => {
+      getMatch();
+    });
   }
 
   return (
     <>
-    <CRow>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Partida</strong> <small>{getValue(params.id, 'date')}</small>
-          </CCardHeader>
-          <CCardBody>
-            <h3>{getValue(params.id, 'name')}</h3>
-            <p className="text-medium-emphasis small">
-              {getAddressText(getValue(params.id, 'address'))}
-            </p>
-            <DocsExample href="components/card/#background-and-color">
-              <CRow>
-                {getValue(params.id, 'participants').map((item, index) => (
-                  <CCol lg={4} key={index}>
-                    <CCard color={getColor(item.position)} textColor={'white'} className="mb-3">
-                      <CCardHeader>Participante</CCardHeader>
-                      <CCardBody>
-                        <CCardTitle>{item.name}</CCardTitle>
-                        <CCardText>
-                          Descrição do Jogador.
-                        </CCardText>
-                      </CCardBody>
-                    </CCard>
-                  </CCol>
-                ))}
-                {getArrayVagas(getValue(params.id, 'amountVacancies')).map((item, index) => (
-                  <CCol lg={4} key={index}>
-                    <CCard color='success' textColor={'white'} className="mb-3">
-                      <CCardHeader>Adicionar Participante</CCardHeader>
-                      <CCardBody>
-                        <BtnSearshParticipant onClick={event => handleShow()}/>
-                      </CCardBody>
-                    </CCard>
-                  </CCol>
-                ))}
-              </CRow>
-            </DocsExample> 
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
-    <Modal aria-labelledby="example-custom-modal-styling-title" dialogClassName="modal-50g" show={show} onHide={handleClose}>
+      <CRow>
+        <CCol xs={12}>
+          <CCard className="mb-4">
+            <CCardHeader>
+              <strong>Partida</strong> <small>{match?.date}</small>
+            </CCardHeader>
+            <CCardBody>
+              <h3>{match?.name}</h3>
+              <p className="text-medium-emphasis small">
+                {getAddressText(match?.address)}
+              </p>
+              <DocsExample href="components/card/#background-and-color">
+                <CRow>
+                  {match?.participants?.map((item, index) => (
+                    <CCol lg={4} key={index}>
+                      <CCard color={getColor(item.status)} textColor={'white'} className="mb-3">
+                        <CCardHeader>{item.status == 'PENDENT'? item.name + ' (Pendente)' : item.name}</CCardHeader>
+                        <CCardBody>
+                          <CCardText>
+                              <BtnDeleteParticipant onClick={event => deleteParticipant(item.id)} />
+                          </CCardText>
+                        </CCardBody>
+                      </CCard>
+                    </CCol>
+                  ))}
+                  {getArrayVagas(match?.amountVacancies)?.map((item, index) => (
+                    <CCol lg={4} key={index}>
+                      <CCard color='success' textColor={'white'} className="mb-3">
+                        <CCardHeader>Adicionar Participante</CCardHeader>
+                        <CCardBody>
+                          <BtnSearshParticipant onClick={event => handleShow()} />
+                        </CCardBody>
+                      </CCard>
+                    </CCol>
+                  ))}
+                </CRow>
+              </DocsExample>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+      <Modal aria-labelledby="example-custom-modal-styling-title" dialogClassName="modal-50g" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Participantes disponíveis</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <CInputGroup className="mb-3">
+          <CInputGroup className="mb-3">
             <CFormInput
               placeholder="Pesquisar Usuário"
               aria-label="Pesquisar Usuário"
               aria-describedby="button-addon2"
             />
             <CButton type="button" color="secondary" variant="outline" id="button-addon2">
-                <CIcon icon={cilSearch}/>
+              <CIcon icon={cilSearch} />
             </CButton>
-        </CInputGroup>
-        {_users.map((item,index) => (
+          </CInputGroup>
+          {users.map((item, index) => (
             <CRow xs={24} sm={12} lg={6}>
               <CWidgetStatsF
                 className="mb-3"
                 icon={<CIcon width={24} icon={cilUser} size="xl" />}
                 value={<CCol xs={12}>
-                <CFormCheck
-                  type="checkbox"
-                  id="invalidCheck"
-                  label={item.name}
-                  required
-                />
-              </CCol>}
+                  <CFormCheck
+                    type="checkbox"
+                    id="invalidCheck"
+                    label={item.name}
+                    required
+                    onChange={value => selectUser(value, item)}
+                  />
+                </CCol>}
                 color="info"
               />
-              
+
             </CRow>
-        ))}
+          ))}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Fechar
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleAddParticipant}>
             Adicionar Participante
           </Button>
         </Modal.Footer>

@@ -13,7 +13,8 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilPhone } from '@coreui/icons'
-import ServiceContext from '../../utils/service/ServiceContext'
+import UserService from '../../utils/service/UserService'
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [username, setUsername] = React.useState("");
@@ -21,6 +22,7 @@ const Register = () => {
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,8 +35,9 @@ const Register = () => {
       phone: phone
   };
 
-  ServiceContext.registerUser(data)
+  UserService.registerUser(data)
       .then(res => {
+        navigate('/login');
       }).catch(function (error) {
           console.log(error);
       })
