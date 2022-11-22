@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 
 import { CBadge } from '@coreui/react'
 import { CNavItem } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilFootball, cilTennisBall, cilBasketball } from '@coreui/icons'
 
 export const AppSidebarNav = ({ items }) => {
   const location = useLocation()
@@ -21,6 +23,33 @@ export const AppSidebarNav = ({ items }) => {
     )
   }
 
+  const getIconBySport = (item) => {
+    let icon;
+    switch (item.sport) {
+      case "SOCCER":
+        icon = <CIcon icon={cilFootball} customClassName="nav-icon" />
+        break;
+      case "VOLLEYBALL":
+        icon = <CIcon icon={cilFootball} customClassName="nav-icon" />
+        break;
+      case "BEACH_TENNIS":
+        icon = <CIcon icon={cilFootball} customClassName="nav-icon" />
+        break;
+      case "BASKETBALL":
+        icon = <CIcon icon={cilBasketball} customClassName="nav-icon" />
+        break;
+      case "HANDBALL":
+        icon = <CIcon icon={cilFootball} customClassName="nav-icon" />
+        break;
+      case "TENNIS":
+        icon = <CIcon icon={cilTennisBall} customClassName="nav-icon" />
+        break;
+      default:
+        icon = <CIcon icon={cilFootball} customClassName="nav-icon" />
+    }
+    return icon;
+  }
+
   const navItem = (item, index) => {
     const { component, name, badge, icon, ...rest } = item
     const Component = CNavItem
@@ -33,7 +62,7 @@ export const AppSidebarNav = ({ items }) => {
         key={index}
         {...rest}
       >
-        {navLink(name, icon, badge)}
+        {navLink(name, getIconBySport(item), badge)}
       </Component>
     )
   }

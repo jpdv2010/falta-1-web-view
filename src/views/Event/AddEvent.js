@@ -15,7 +15,7 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { registerMatch } from '../../utils/service/MatchService';
-import { getByUsername } from '../../utils/service/UserService';
+import { getUserByUsername } from '../../utils/service/UserService';
 import { useNavigate } from 'react-router-dom';
 
 const AddEvent = () => {
@@ -100,12 +100,12 @@ const AddEvent = () => {
                         <CFormLabel htmlFor="inputState">Esporte</CFormLabel>
                         <CFormSelect id="inputGroupSelect01" onChange={(event) => {setSport(event.target?.value)}} value={sport} >
                             <option>Esporte...</option>
-                            <option value="1">Futebol</option>
-                            <option value="2">Vôlei</option>
-                            <option value="4">Beach Tenis</option>
-                            <option value="5">Basquete</option>
-                            <option value="6">Handball</option>
-                            <option value="7">Tênis</option>
+                            <option value="SOCCER">Futebol</option>
+                            <option value="VOLLEYBALL">Vôlei</option>
+                            <option value="BEACH_TENNIS">Beach Tenis</option>
+                            <option value="BASKETBALL">Basquete</option>
+                            <option value="HANDBALL">Handball</option>
+                            <option value="TENNIS">Tênis</option>
                         </CFormSelect>
                     </CCol>
                     <CCol md={6}>

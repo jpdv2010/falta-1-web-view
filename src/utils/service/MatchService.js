@@ -36,7 +36,8 @@ export const getMatchNavigation = (matches) => {
     matches.forEach(element => {
         let navigationItem = {
             to: '/event/' + element.id,
-            name: element.matchName
+            name: element.matchName,
+            sport: element.sport
         }
         navigation.push(navigationItem);
     });
