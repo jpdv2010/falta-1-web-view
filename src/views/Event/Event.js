@@ -17,7 +17,7 @@ import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant } from '../../c
 import { useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { cilUser, cilSearch, cilBadge } from '@coreui/icons'
+import { cilUser, cilSearch, cilBadge, cilFootball, cilTennisBall, cilBasketball } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 //TODO alterar busca de dados para utilizar as informações da api
@@ -148,6 +148,33 @@ const Event = () => {
     }
   }
 
+  const getIconBySport = (item) => {
+    let icon;
+    switch (item.sport) {
+      case "SOCCER":
+        icon = <CIcon icon={cilFootball} size="xl"/>
+        break;
+      case "VOLLEYBALL":
+        icon = <CIcon icon={cilFootball} size="xl"/>
+        break;
+      case "BEACH_TENNIS":
+        icon = <CIcon icon={cilFootball} size="xl"/>
+        break;
+      case "BASKETBALL":
+        icon = <CIcon icon={cilBasketball} size="xl"/>
+        break;
+      case "HANDBALL":
+        icon = <CIcon icon={cilFootball} size="xl"/>
+        break;
+      case "TENNIS":
+        icon = <CIcon icon={cilTennisBall}  size="xl"/>
+        break;
+      default:
+        icon = <CIcon icon={cilFootball} size="xl"/>
+    }
+    return icon;
+  }
+
   return (
     <>
       <CRow>
@@ -165,7 +192,7 @@ const Event = () => {
                 <CRow>
                   <CCol lg={4}>
                     <CCard color={'info'} textColor={'white'} className="mb-3">
-                      <CCardHeader>{'Você'}</CCardHeader>
+                      <CCardHeader>{currentUsername == match?.creator.username? 'Você (Criador)' : match?.creator.name + ' (Criador)'}</CCardHeader>
                       <CCardBody>
                         <CCardText style={{padding: '8px'}}>
                           <div class="btn-searsh-participant-container">
@@ -178,10 +205,10 @@ const Event = () => {
                   {match?.participants?.map((item, index) => (
                     <CCol lg={4} key={index}>
                       <CCard color={getColor(item.status)} textColor={'white'} className="mb-3">
-                        <CCardHeader>{item.status == 'PENDENT'? item.name + ' (Pendente)' : item.name}</CCardHeader>
+                        <CCardHeader>{item.username == currentUsername? item.name + ' (Você)' : item.status == 'PENDENT'? item.name + ' (Pendente)' : item.name}</CCardHeader>
                         <CCardBody>
                           <CCardText>
-                              {match?.creator?.username == currentUsername? <BtnDeleteParticipant onClick={event => clickDeleteParticipant(item.id)}/> : <></>}
+                              {match?.creator?.username == currentUsername? <BtnDeleteParticipant onClick={event => clickDeleteParticipant(item.id)}/> : <CCardText style={{padding: '8px'}}><div class="btn-searsh-participant-container">{getIconBySport(match.sport)}</div></CCardText>}
                           </CCardText>
                         </CCardBody>
                       </CCard>

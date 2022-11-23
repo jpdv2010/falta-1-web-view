@@ -89,12 +89,15 @@ const SearshEvent = () => {
                     name: result.data.name,
                     phone: result.data.phone,
                     match: match,
-                    status: 1
+                    status: 1,
+                    username: currentUserName,
+                    matchid: match.id,
+                    matchname: match.matchName
                   };
           
                   registerParticipant(participant).then(result => {
                     match.participants.push(result.data);
-                    navigate('/event/' + match.id);
+                    navigate('/event/' + match.id, {state: { rld: true}});
                     resolve(match);
                   });
               });
