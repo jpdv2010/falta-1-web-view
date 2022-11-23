@@ -22,7 +22,7 @@ import CIcon from '@coreui/icons-react'
 
 //TODO alterar busca de dados para utilizar as informações da api
 import { getMatchById, updateMatch } from '../../utils/service/MatchService';
-import { getAllUsers } from '../../utils/service/UserService';
+import { getAllUsers, getUserByUsername } from '../../utils/service/UserService';
 import { deleteParticipant, registerParticipant } from '../../utils/service/ParticipantService';
 
 const Event = () => {
@@ -32,6 +32,7 @@ const Event = () => {
   const [users, setUsers] = React.useState([]);
   const [selectedUsers, setSelectedUsers] = React.useState([]);
   const [currentUsername, setCurrentUserName] = React.useState(undefined);
+  const [findUserField, setFindUserField] = React.useState(undefined);
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -132,6 +133,18 @@ const Event = () => {
     });
   }
 
+  const clickFindUser = () => {
+    if(!findUserField) {
+      handleShow();
+    } else {
+      getUserByUsername(findUserField).then(result => {
+        let users = [];
+        users.push(result.data);
+        setUsers(users);
+      });
+    }
+  }
+
   return (
     <>
       <CRow>
@@ -197,8 +210,10 @@ const Event = () => {
               placeholder="Pesquisar Usuário"
               aria-label="Pesquisar Usuário"
               aria-describedby="button-addon2"
+              value={findUserField}
+              onChange={event => setFindUserField(event.target?.value)}
             />
-            <CButton type="button" color="secondary" variant="outline" id="button-addon2">
+            <CButton type="button" color="secondary" variant="outline" id="button-addon2" onClick={event => clickFindUser()}>
               <CIcon icon={cilSearch} />
             </CButton>
           </CInputGroup>
