@@ -21,7 +21,7 @@ import { cilUser, cilSearch, cilBadge } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 //TODO alterar busca de dados para utilizar as informações da api
-import { getMatchById, updateMatch } from '../../utils/service/MatchService';
+import { getMatchById } from '../../utils/service/MatchService';
 import { getAllUsers, getUserByUsername } from '../../utils/service/UserService';
 import { deleteParticipant, registerParticipant } from '../../utils/service/ParticipantService';
 
@@ -103,7 +103,10 @@ const Event = () => {
           name: selectedUser.name,
           phone: selectedUser.phone,
           match: match,
-          status: 0
+          status: 0,
+          username: selectedUser.username,
+          matchname: match.matchName,
+          matchid: match.id
         };
 
         registerParticipant(participant).then(result => {

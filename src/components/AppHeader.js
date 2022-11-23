@@ -13,12 +13,43 @@ import CIcon from '@coreui/icons-react'
 import { cilMenu, cilExitToApp, cilBellExclamation, cilBell } from '@coreui/icons'
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import _convites from '../_convites'
+import { useEffect } from 'react'
+import { deleteParticipant, getPendentParticipants, updateParticipant } from '../utils/service/ParticipantService'
+import { getMatchById } from '../utils/service/MatchService'
+import { useNavigate } from 'react-router-dom'
 
 const AppHeader = () => {
-  const [hasNotification, setHasNotification] = React.useState(true);
+  const [hasNotification, setHasNotification] = React.useState(false);
+  const [convites, setConvites] = React.useState([]);
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let currentUserName = localStorage.getItem('user-name');
+    getPendentParticipants(currentUserName).then(result => {
+      if(result.data.length > 0) {
+        setHasNotification(true);
+      } else {
+        setHasNotification(false);
+      }
+      setConvites(result.data);
+    })
+  })
+
+  const accept = (item) => {
+    getMatchById(item.matchid).then(result => {
+      item.match = result.data;
+      item.status = 1;
+      updateParticipant(item, item.id).then(result => {
+        navigate('/event/' + item.matchid, {state: { rld: true}});
+      });
+    });
+  }
+
+  const decline = (item) => {
+    deleteParticipant(item.id)
+  }
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -41,14 +72,14 @@ const AppHeader = () => {
                     <Popover id={`popover-positioned-${'bottom'}`}>
                       <Popover.Header as="h3">Convites</Popover.Header>
                       <Popover.Body>
-                        {_convites.map((item, index) => (
+                        {convites.map((item, index) => (
                           <ul class="list-group">
                             <li class="list-group-item">
-                              <h5>{item.name}</h5>
-                              <h6>{item.invitedBy + ' te convidou para uma partida'}</h6>
+                              <h5>{item.matchname}</h5>
+                              <h6>{'Você foi convidado para uma partida'}</h6>
                               <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                <button type="button" class="btn btn-success">To dentro!</button>
-                                <button type="button" class="btn btn-danger">Fora!</button>
+                                <button type="button" class="btn btn-success" onClick={event => accept(item)}>To dentro!</button>
+                                <button type="button" class="btn btn-danger" onClick={evend => decline(item)}>Fora!</button>
                               </div>
                             </li>
                           </ul>

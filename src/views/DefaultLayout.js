@@ -4,6 +4,7 @@ import {useNavigate, useLocation} from 'react-router-dom';
 import { getUserByUsername } from '../utils/service/UserService'
 import { getNavigation } from '../utils/service/MatchService'
 import { useEffect } from 'react';
+import { getParticipantNavigation } from '../utils/service/ParticipantService';
 
 const DefaultLayout = () => {
   const [navigation, setNavigation] = React.useState(undefined);
@@ -21,9 +22,16 @@ const DefaultLayout = () => {
       if(responseUser) {
           responseUser.then(userRes => {
               getNavigation(userRes.data.id).then(nav => {
-                setNavigation(nav);
-                setLoaded(true);
-                state.rld = false;
+                getParticipantNavigation(currentUserName).then(navParticipant => {
+                  if(navParticipant.length > 0) {
+                    navParticipant.forEach(particip => {
+                      nav.push(particip);
+                    })
+                  }
+                  setNavigation(nav);
+                  setLoaded(true);
+                  if(state)state.rld = false;
+                })
               })
           }).catch(error => {
             if(error.response.status == 401) {
