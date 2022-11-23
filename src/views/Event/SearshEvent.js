@@ -27,6 +27,7 @@ const SearshEvent = () => {
     const [schedule, setSchedule] = React.useState(undefined);
     const [events, setEvents] = React.useState(undefined);
     const navigate = useNavigate();
+    const [searsh, setSearsh] = React.useState(false);
 
     const getVagasRestantes = (item) => {
         let size = item.amountVacancies - item.participants.length;
@@ -34,6 +35,7 @@ const SearshEvent = () => {
     }
 
     const handleSubmit = () => {
+        setSearsh(true);
         setFiltered(true)
         filter();
     }
@@ -50,6 +52,7 @@ const SearshEvent = () => {
     
             getMatchPage(filter).then(result => {
                 setEvents(result.data);
+                setSearsh(false);
             })
         }
     }
@@ -62,7 +65,9 @@ const SearshEvent = () => {
     }
 
     useEffect(() => {
-        filter();
+        if(searsh) {
+            filter();
+        }
     })
 
     const joinMatch = (match) => {
@@ -174,15 +179,15 @@ const SearshEvent = () => {
                 ))}
                 <nav aria-label="...">
                     <ul class="pagination justify-content-center" style={{position: 'fixed', bottom: '0px'}}>
-                        <li class={params.page == 0? "page-item disabled" : "page-item"}>
+                        <li class={params.page == 0? "page-item disabled" : "page-item"} onClick={event => setSearsh(true)}>
                         <a class="page-link" href={'#/searsh-event/' + (params.page - 1)}>Anterior</a>
                         </li>
-                        <li class={isActive(0)? "page-item active" : "page-item"}><a class="page-link" href='#/searsh-event/0'>1</a></li>
-                        <li class={isActive(1)? "page-item active" : "page-item"} aria-current="page">
+                        <li class={isActive(0)? "page-item active" : "page-item"} onClick={event => setSearsh(true)}><a class="page-link" href='#/searsh-event/0'>1</a></li>
+                        <li class={isActive(1)? "page-item active" : "page-item"} aria-current="page" onClick={event => setSearsh(true)}>
                         <a class="page-link" href='#/searsh-event/1'>2</a>
                         </li>
-                        <li class={isActive(2)? "page-item active" : "page-item"}><a class="page-link" href='#/searsh-event/2'>3</a></li>
-                        <li class={params.page == 2? "page-item disabled" : "page-item"}>
+                        <li class={isActive(2)? "page-item active" : "page-item"} onClick={event => setSearsh(true)}><a class="page-link" href='#/searsh-event/2'>3</a></li>
+                        <li class={params.page == 2? "page-item disabled" : "page-item"} onClick={event => setSearsh(true)}>
                         <a class="page-link" href={'#/searsh-event/' + (new Number(params.page) + 1)}>Próximo</a>
                         </li>
                     </ul>
