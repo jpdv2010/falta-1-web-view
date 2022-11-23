@@ -71,3 +71,24 @@ export const getMatchPage = (filter) => {
 export const updateMatch = (match) => {
     return doPut('match', match, getHeaderAutenticated());
 }
+
+export const getMatchCount = (filter) => {
+    let filterString = '';
+    if(filter.schedule) {
+        filterString += 'schedule=' + filter.schedule;
+    }
+    if(filterString != '') {
+        filterString += '&';
+    }
+    if(filter.sport) {
+        filterString += 'sport=' + filter.sport;
+    }
+    if(filterString != '') {
+        filterString += '&';
+    }
+    if(filter.matchName) {
+        filterString += 'matchName=' + filter.matchName;
+    }
+
+    return doGet('match/count?' + filterString, getHeaderAutenticated());
+}

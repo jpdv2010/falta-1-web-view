@@ -13,7 +13,7 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import CIcon from '@coreui/icons-react';
 import { cilFilter } from '@coreui/icons'
-import { getMatchPage, updateMatch } from '../../utils/service/MatchService';
+import { getMatchCount, getMatchPage, updateMatch } from '../../utils/service/MatchService';
 import { getUserByUsername } from '../../utils/service/UserService';
 import { registerParticipant } from '../../utils/service/ParticipantService';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -28,6 +28,7 @@ const SearshEvent = () => {
     const [events, setEvents] = React.useState(undefined);
     const navigate = useNavigate();
     const [searsh, setSearsh] = React.useState(false);
+    const [pageList, setPageList] = React.useState([]);
 
     const getVagasRestantes = (item) => {
         let size = item.amountVacancies - item.participants.length;
@@ -49,11 +50,20 @@ const SearshEvent = () => {
                 page: params.page,
                 size: 5
             };
-    
-            getMatchPage(filter).then(result => {
-                setEvents(result.data);
-                setSearsh(false);
-            })
+            
+            getMatchCount(filter).then(countData => {
+                let size = Math.ceil(countData.data / 5);
+                var pages = [];
+                for (var i = 0; i < size; i++) {
+                    pages.push({ page: i + 1 })
+                }
+                setPageList(pages);
+
+                getMatchPage(filter).then(result => {
+                    setEvents(result.data);
+                    setSearsh(false);
+                })
+            });
         }
     }
 
@@ -180,15 +190,13 @@ const SearshEvent = () => {
                 <nav aria-label="...">
                     <ul class="pagination justify-content-center" style={{position: 'fixed', bottom: '0px'}}>
                         <li class={params.page == 0? "page-item disabled" : "page-item"} onClick={event => setSearsh(true)}>
-                        <a class="page-link" href={'#/searsh-event/' + (params.page - 1)}>Anterior</a>
+                            <a class="page-link" href={'#/searsh-event/' + (params.page - 1)}>Anterior</a>
                         </li>
-                        <li class={isActive(0)? "page-item active" : "page-item"} onClick={event => setSearsh(true)}><a class="page-link" href='#/searsh-event/0'>1</a></li>
-                        <li class={isActive(1)? "page-item active" : "page-item"} aria-current="page" onClick={event => setSearsh(true)}>
-                        <a class="page-link" href='#/searsh-event/1'>2</a>
-                        </li>
-                        <li class={isActive(2)? "page-item active" : "page-item"} onClick={event => setSearsh(true)}><a class="page-link" href='#/searsh-event/2'>3</a></li>
-                        <li class={params.page == 2? "page-item disabled" : "page-item"} onClick={event => setSearsh(true)}>
-                        <a class="page-link" href={'#/searsh-event/' + (new Number(params.page) + 1)}>Próximo</a>
+                        {pageList?.map((item, index) => (
+                            <li class={isActive(index)? "page-item active" : "page-item"} onClick={event => setSearsh(true)}><a class="page-link" href={'#/searsh-event/' + index}>{item.page}</a></li>
+                        ))}
+                        <li class={params.page == pageList.length - 1? "page-item disabled" : "page-item"} onClick={event => setSearsh(true)}>
+                            <a class="page-link" href={'#/searsh-event/' + (new Number(params.page) + 1)}>Próximo</a>
                         </li>
                     </ul>
                 </nav>
