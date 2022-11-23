@@ -56,6 +56,14 @@ export const getMatchPage = (filter) => {
     if(filter.matchName) {
         filterString += 'matchName=' + filter.matchName;
     }
+    if(filterString != '') {
+        filterString += '&';
+    }
+    filterString += 'page=' + filter.page;
+    if(filterString != '') {
+        filterString += '&';
+    }
+    filterString += 'size=' + filter.size;
 
     return doGet('match/page?' + filterString, getHeaderAutenticated());
 }

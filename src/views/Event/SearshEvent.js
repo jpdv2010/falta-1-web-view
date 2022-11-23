@@ -16,9 +16,11 @@ import { cilFilter } from '@coreui/icons'
 import { getMatchPage, updateMatch } from '../../utils/service/MatchService';
 import { getUserByUsername } from '../../utils/service/UserService';
 import { registerParticipant } from '../../utils/service/ParticipantService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const SearshEvent = () => {
+    const params = useParams();
     const [filtered, setFiltered] = React.useState(false);
     const [sport, setSport] = React.useState(undefined);
     const [matchName, setMatchName] = React.useState(undefined);
@@ -32,18 +34,24 @@ const SearshEvent = () => {
     }
 
     const handleSubmit = () => {
-        let filter = {
-            sport: sport,
-            matchName: matchName,
-            schedule: schedule
-        };
-
-        getMatchPage(filter).then(result => {
-            setEvents(result.data);
-            setFiltered(true);
-        })
-        
-
+        setFiltered(true)
+        filter();
+    }
+    
+    const filter = () => {
+        if(filtered == true) {
+            let filter = {
+                sport: sport,
+                matchName: matchName,
+                schedule: schedule,
+                page: params.page,
+                size: 5
+            };
+    
+            getMatchPage(filter).then(result => {
+                setEvents(result.data);
+            })
+        }
     }
 
     const gotoFilter = () => {
@@ -52,6 +60,10 @@ const SearshEvent = () => {
         setSport(undefined);
         setFiltered(false);
     }
+
+    useEffect(() => {
+        filter();
+    })
 
     const joinMatch = (match) => {
         let currentUserName = localStorage.getItem('user-name');
@@ -74,12 +86,16 @@ const SearshEvent = () => {
 
     }
 
+    const isActive = (aPage) => {
+        return aPage == params.page;
+    }
+
     return (
         <>
             {filtered ?
                 <></> :
                 <CCardBody>
-                    <CForm onSubmit={(event) => handleSubmit(event)} className="row g-3">
+                    <CForm onSubmit={(event) => handleSubmit(0)} className="row g-3">
                         <CCol md={3}>
                             <CFormLabel htmlFor="inputPassword4">Data</CFormLabel>
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -156,6 +172,21 @@ const SearshEvent = () => {
                         </CCard>
                     </CCol>
                 ))}
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-center" style={{position: 'fixed', bottom: '0px'}}>
+                        <li class="page-item disabled">
+                        <a class="page-link">Previous</a>
+                        </li>
+                        <li class={isActive(0)? "page-item active" : "page-item"}><a class="page-link" href='#/searsh-event/0'>1</a></li>
+                        <li class={isActive(1)? "page-item active" : "page-item"} aria-current="page">
+                        <a class="page-link" href='#/searsh-event/1'>2</a>
+                        </li>
+                        <li class={isActive(2)? "page-item active" : "page-item"}><a class="page-link" href='#/searsh-event/2'>3</a></li>
+                        <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </CRow>
         </>
     )
