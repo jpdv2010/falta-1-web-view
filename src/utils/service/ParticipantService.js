@@ -1,13 +1,9 @@
-import ServiceContext from "./ServiceContext";
-
-const context = ServiceContext;
+import { doDelete, doPost, getHeaderAutenticated } from "./ServiceContext";
 
 export const registerParticipant = (participant) => {
-    context.getToken();
-    return context.doPost('participant', participant);
+    return doPost('participant', participant), getHeaderAutenticated();
 }
 
 export const deleteParticipant = (id) => {
-    context.getToken();
-    return context.doDelete('participant', id);
+    return doDelete('participant', id, getHeaderAutenticated());
 }

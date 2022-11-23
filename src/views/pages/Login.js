@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
     CButton,
@@ -18,14 +18,14 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom';
 import { getUserByUsername, login } from '../../utils/service/UserService'
 
-const Login = () => {
+const Login = ({ logout }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
     function handleSubmit(e) {
         e.preventDefault();
-        
+
         let data = {
             username: username,
             password: password
@@ -33,40 +33,48 @@ const Login = () => {
 
         //TODO: remover linha 35 quando o acesso a api estiver funcionando
         //navigate('/dashboard');
-        
+
         let response = login(data);
 
-        if(response) {
+        if (response) {
             response.then(res => {
                 localStorage.setItem('access-token', res.data.token);
                 let responseUser = getUserByUsername(username);
-                if(responseUser) {
+                if (responseUser) {
                     responseUser.then(userRes => {
                         localStorage.setItem('user-name', userRes.data.username);
                         navigate('/dashboard');
                     })
                 }
             }).catch(function (error) {
-                if(error.response.status == 401) {
+                if (error.response.status == 401) {
                     alert("Usuário ou senha incorretos!", 'danger')
                 }
                 console.log(error);
             });
-        }   
+        }
     }
 
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 
-    const alert = (message, type) => {
-    const wrapper = document.createElement('div')
-    wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-    ].join('')
+    useEffect(() => {
+        if (logout) {
+            localStorage.removeItem('access-token');
+            localStorage.removeItem('user-name');
+        }
+    })
 
-    alertPlaceholder.append(wrapper)
+
+    const alert = (message, type) => {
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = [
+            `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+            `   <div>${message}</div>`,
+            '   <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>',
+            '</div>'
+        ].join('')
+
+        alertPlaceholder.append(wrapper)
     }
 
     return (
@@ -99,7 +107,7 @@ const Login = () => {
                                         <CRow>
                                             <CCol xs={4}>
                                                 <CButton color="primary" type="submit" className="px-4">
-                                                    Entrar 
+                                                    Entrar
                                                 </CButton>
                                             </CCol>
                                             <CCol xs={6}>

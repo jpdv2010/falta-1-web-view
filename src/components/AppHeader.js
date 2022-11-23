@@ -64,7 +64,7 @@ const AppHeader = () => {
           </CNavItem>
 
           <CNavItem>
-            <CNavLink href="#/login">
+            <CNavLink href="#/logout">
               <CIcon icon={cilExitToApp} size="lg" />
             </CNavLink>
           </CNavItem>

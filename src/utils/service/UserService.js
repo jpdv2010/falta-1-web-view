@@ -1,21 +1,17 @@
-import ServiceContext from "./ServiceContext";
-
-const context = ServiceContext;
+import ServiceContext, { doGet, doPost, getHeader, getHeaderAutenticated } from "./ServiceContext";
 
 export const getUserByUsername = (username) => {
-    context.getToken();
-    return context.doGet('user/find-by-username/' + username);
+    return doGet('user/find-by-username/' + username, getHeaderAutenticated());
  };
  
- export const registerUser = () => {
-    return context.doPost('user', user);
+ export const registerUser = (user) => {
+    return doPost('user', user, getHeader());
  };
 
  export const getAllUsers = () => {
-    context.getToken();
-    return context.doGet('user');
+    return doGet('user', getHeaderAutenticated());
  };
 
  export const login = (jsonLogin) => {
-    return context.doPost('login', jsonLogin);
+    return doPost('login', jsonLogin, getHeader());
  }

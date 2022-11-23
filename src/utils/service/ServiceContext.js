@@ -1,15 +1,10 @@
 import axios from "axios"
+import { serverConfig } from "../../_serverConfig";
 
-class ServiceContext {
-    static address = 'http://localhost:8080/';
-    static headers = {
-          "Content-type":"application/json"
-        };
-        
-    static doPost(endPoint, content) {
+    export const doPost = (endPoint, content, headers) => {
           var promise = new Promise((resolve,regect) => {
-            axios.post(this.address + 'api/' + endPoint, content, {
-                headers: this.headers
+            axios.post(serverConfig().address + 'api/' + endPoint, content, {
+                headers: headers
               })
               .then((response) => {
                 resolve(response);
@@ -21,10 +16,10 @@ class ServiceContext {
         return promise;
     }
     
-    static doGet(endPoint) {
+    export const doGet = (endPoint, headers) => {
         var promise = new Promise((resolve,regect) => {
-            axios.get(this.address + 'api/' + endPoint, {
-                headers: this.headers
+            axios.get(serverConfig().address + 'api/' + endPoint, {
+                headers: headers
               })
             .then(result => {
                 resolve(result);
@@ -36,10 +31,10 @@ class ServiceContext {
         return promise;
     }
 
-    static doPut(endPoint, content) {
+    export const doPut = (endPoint, content, headers) => {
         var promise = new Promise((resolve,regect) => {
-            axios.put(this.address + 'api/' + endPoint, content, {
-                headers: this.headers
+            axios.put(serverConfig().address + 'api/' + endPoint, content, {
+                headers: headers
               })
               .then((response) => {
                 resolve(response);
@@ -51,10 +46,10 @@ class ServiceContext {
         return promise;
     }
 
-    static doDelete(endPoint, id) {
+    export const doDelete = (endPoint, id, headers) => {
       var promise = new Promise((resolve,regect) => {
-          axios.delete(this.address + 'api/' + endPoint + '/' + id, {
-              headers: this.headers
+          axios.delete(serverConfig().address + 'api/' + endPoint + '/' + id, {
+              headers: headers
             })
             .then((response) => {
               resolve(response);
@@ -66,12 +61,20 @@ class ServiceContext {
       return promise;
   }
 
-    static getToken() {
+    export const getHeaderAutenticated = () => {
+        let headers = {
+          "Content-type":"application/json"
+        };
         const token = localStorage.getItem('access-token');
         if(null != token) {
-            this.headers["Authorization"] = "Bearer " + token;
+            headers["Authorization"] = "Bearer " + token;
         }
+        return headers;
     }
 
-}
-export default ServiceContext
+    export const getHeader = () => {
+      let headers = {
+        "Content-type":"application/json"
+      };
+      return headers;
+  }

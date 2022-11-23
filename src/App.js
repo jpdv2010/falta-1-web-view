@@ -21,6 +21,7 @@ function App() {
             <Route exact path="/login" name="Login Page" element={<Login />} />
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="*" name="Home" element={<DefaultLayout />} />
+            <Route exact path="/logout" name="Login Page" element={<Login logout={true}/>} />
           </Routes>
         </Suspense>
     </HashRouter>

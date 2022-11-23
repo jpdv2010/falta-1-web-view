@@ -17,6 +17,10 @@ const DefaultLayout = () => {
             getNavigation(userRes.data.id).then(nav => {
               setNavigation(nav);
             })
+        }).catch(error => {
+          if(error.response.status == 401) {
+            navigate('/login', {untr: true});
+          }
         })
     } else {
       navigate('/login');

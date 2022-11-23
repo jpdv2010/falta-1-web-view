@@ -1,26 +1,19 @@
-import { fi } from "date-fns/locale";
-import ServiceContext, { getToken } from "./ServiceContext";
-
-const context = ServiceContext;
+import { doGet, doPost, getHeaderAutenticated } from "./ServiceContext";
 
 export const registerMatch = (match) => {
-    context.getToken();
-    return context.doPost('match', match);
+    return doPost('match', match, getHeaderAutenticated());
 }
 
 export const getMatch = () => {
-    context.getToken();
-    return context.doGet('match');
+    return doGet('match', getHeaderAutenticated());
 }
 
 export const getMatchById = (matchId) => {
-    context.getToken();
-    return context.doGet('match/' + matchId);
+    return doGet('match/' + matchId, getHeaderAutenticated());
 }
 
 export const getByUser = (userId) => {
-    context.getToken();
-    return context.doGet('match/page?creatorId=' + userId);
+    return doGet('match/page?creatorId=' + userId, getHeaderAutenticated());
 }
 
 export const getNavigation = (userId) => {
@@ -47,7 +40,6 @@ export const getMatchNavigation = (matches) => {
 }
 
 export const getMatchPage = (filter) => {
-    context.getToken();
     let filterString = '';
     if(filter.schedule) {
         filterString += 'schedule=' + filter.schedule;
@@ -65,10 +57,10 @@ export const getMatchPage = (filter) => {
         filterString += 'matchName=' + filter.matchName;
     }
 
-    return context.doGet('match/page?' + filterString);
+    return doGet('match/page?' + filterString, getHeaderAutenticated());
 }
 
 export const updateMatch = (match) => {
-    context.getToken();
-    return context.doPut('match', match);
+    getToken();
+    return doPut('match', match, getHeaderAutenticated());
 }
