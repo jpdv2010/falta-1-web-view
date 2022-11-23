@@ -39,6 +39,7 @@ const SearshEvent = () => {
         setSearsh(true);
         setFiltered(true)
         filter();
+        navigate('/searsh-event/0');
     }
     
     const filter = () => {
