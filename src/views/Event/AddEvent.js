@@ -55,7 +55,7 @@ const AddEvent = () => {
     
             registerMatch(data)
                 .then(res => {
-                    navigate('/event/' + res.data.id);
+                    navigate('/event/' + res.data.id, {state: { rld: true}});
                 }).catch(function (error) {
                     console.log(error);
                 })

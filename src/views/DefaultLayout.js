@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useLocation} from 'react-router-dom';
 import { getUserByUsername } from '../utils/service/UserService'
 import { getNavigation } from '../utils/service/MatchService'
 import { useEffect } from 'react';
@@ -8,22 +8,31 @@ import { useEffect } from 'react';
 const DefaultLayout = () => {
   const [navigation, setNavigation] = React.useState(undefined);
   const navigate = useNavigate();
+  const [loaded, setLoaded] = React.useState(false);
+  const {state} = useLocation();
 
   useEffect(() => {
-    let currentUserName = localStorage.getItem('user-name');        
-    let responseUser = getUserByUsername(currentUserName);
-    if(responseUser) {
-        responseUser.then(userRes => {
-            getNavigation(userRes.data.id).then(nav => {
-              setNavigation(nav);
-            })
-        }).catch(error => {
-          if(error.response.status == 401) {
-            navigate('/login', {untr: true});
-          }
-        })
-    } else {
-      navigate('/login');
+    if(state?.rld) {
+      setLoaded(false);
+    }
+    if(!loaded) {
+      let currentUserName = localStorage.getItem('user-name');        
+      let responseUser = getUserByUsername(currentUserName);
+      if(responseUser) {
+          responseUser.then(userRes => {
+              getNavigation(userRes.data.id).then(nav => {
+                setNavigation(nav);
+                setLoaded(true);
+                state.rld = false;
+              })
+          }).catch(error => {
+            if(error.response.status == 401) {
+              navigate('/login', {untr: true});
+            }
+          })
+      } else {
+        navigate('/login');
+      }
     }
   });
 

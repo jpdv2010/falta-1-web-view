@@ -71,10 +71,11 @@ const Event = () => {
 
   useEffect(() => {
     setCurrentUserName(localStorage.getItem('user-name'));
-    
-    getMatchById(params.id).then(result => {
-      setMatch(result.data);
-    });
+    if(params.id != match?.id) {
+      getMatchById(params.id).then(result => {
+        setMatch(result.data);
+      });
+    }
   });
 
   const getArrayVagas = (qtdParticipantes) => {
