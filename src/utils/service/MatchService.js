@@ -1,4 +1,4 @@
-import { doGet, doPost, getHeaderAutenticated } from "./ServiceContext";
+import { doGet, doPost, getHeaderAutenticated, doPut } from "./ServiceContext";
 
 export const registerMatch = (match) => {
     return doPost('match', match, getHeaderAutenticated());
@@ -61,6 +61,5 @@ export const getMatchPage = (filter) => {
 }
 
 export const updateMatch = (match) => {
-    getToken();
     return doPut('match', match, getHeaderAutenticated());
 }

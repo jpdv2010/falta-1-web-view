@@ -66,14 +66,9 @@ const SearshEvent = () => {
           
                   registerParticipant(participant).then(result => {
                     match.participants.push(result.data);
+                    navigate('/event/' + match.id);
                     resolve(match);
                   });
-              });
-          
-              promise.then(match => {
-                updateMatch(match).then(result => {
-                    navigate('/event/' + match.id);
-                });
               });
         });
 

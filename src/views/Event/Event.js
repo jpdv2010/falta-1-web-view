@@ -106,16 +106,11 @@ const Event = () => {
 
         registerParticipant(participant).then(result => {
           match.participants.push(result.data);
+          setShow(false);
+          setSelectedUsers([]);
+          getMatch();
           resolve(match);
         });
-      });
-    });
-
-    promise.then(match => {
-      updateMatch(match).then(result => {
-        setShow(false);
-        setSelectedUsers([]);
-        getMatch();
       });
     });
   }
