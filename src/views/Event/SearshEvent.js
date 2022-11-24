@@ -83,30 +83,48 @@ const SearshEvent = () => {
 
     const joinMatch = (match) => {
         let currentUserName = localStorage.getItem('user-name');
-        getUserByUsername(currentUserName).then(result => {
-            var promise = new Promise((resolve, regect) => {
-                  let participant = {
-                    name: result.data.name,
-                    phone: result.data.phone,
-                    match: match,
-                    status: 1,
-                    username: currentUserName,
-                    matchid: match.id,
-                    matchname: match.matchName
-                  };
-          
-                  registerParticipant(participant).then(result => {
-                    match.participants.push(result.data);
-                    navigate('/event/' + match.id, {state: { rld: true}});
-                    resolve(match);
+        let index = match.participants.findIndex(participant => participant.username == currentUserName);
+        if(index != -1 || match.creator.username == currentUserName) {
+            alert('Você já faz parte desta partida!', 'danger');
+        } else {
+            getUserByUsername(currentUserName).then(result => {
+                var promise = new Promise((resolve, regect) => {
+                      let participant = {
+                        name: result.data.name,
+                        phone: result.data.phone,
+                        match: match,
+                        status: 1,
+                        username: currentUserName,
+                        matchid: match.id,
+                        matchname: match.matchName
+                      };
+              
+                      registerParticipant(participant).then(result => {
+                        match.participants.push(result.data);
+                        navigate('/event/' + match.id, {state: { rld: true}});
+                        resolve(match);
+                      });
                   });
-              });
-        });
-
+            });
+        }
     }
 
     const isActive = (aPage) => {
         return aPage == params.page;
+    }
+
+    const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+
+    const alert = (message, type) => {
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = [
+            `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+            `   <div>${message}</div>`,
+            '   <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>',
+            '</div>'
+        ].join('')
+
+        alertPlaceholder.append(wrapper)
     }
 
     return (
@@ -191,6 +209,7 @@ const SearshEvent = () => {
                         </CCard>
                     </CCol>
                 ))}
+                <div id="liveAlertPlaceholder"></div>
                 <nav aria-label="...">
                     <ul class="pagination justify-content-center" style={{position: 'fixed', bottom: '0px'}}>
                         <li class={params.page == 0? "page-item disabled" : "page-item"} onClick={event => setSearsh(true)}>

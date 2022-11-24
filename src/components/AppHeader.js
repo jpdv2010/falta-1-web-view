@@ -41,9 +41,15 @@ const AppHeader = () => {
     getMatchById(item.matchid).then(result => {
       item.match = result.data;
       item.status = 1;
-      updateParticipant(item, item.id).then(result => {
-        navigate('/event/' + item.matchid, {state: { rld: true}});
+      deleteParticipant(item.id).then((result)=> {
+        registerParticipant(item).then(result => {
+          navigate('/event/' + item.matchid, {state: { rld: true}});
+        })
       });
+      //TODO update de match está com erro = por enquanto valos deletar e adicionar novamente o participante com status aceito
+      // updateParticipant(item, item.id).then(result => {
+      //   navigate('/event/' + item.matchid, {state: { rld: true}});
+      // });
     });
   }
 

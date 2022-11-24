@@ -54,10 +54,17 @@ const Event = () => {
   const handleShow = (id, value) => {
     getAllUsers().then(result => {
       let users = result.data;
-      let index = users.find(user => user.username == currentUsername);
+      let index = users.findIndex(user => user.username == currentUsername);
       if(index != -1) {
         users.splice(index, 1);
       }
+
+      match.participants.forEach(participant => {
+        let index = users.findIndex(p => p.username == participant.username);
+        if(index != -1) {
+          users.splice(index, 1);
+        }
+      })
       
       setUsers(users);
       setShow(true);
@@ -98,25 +105,31 @@ const Event = () => {
 
   const handleAddParticipant = () => {
     var promise = new Promise((resolve, regect) => {
-      selectedUsers.forEach(selectedUser => {
-        let participant = {
-          name: selectedUser.name,
-          phone: selectedUser.phone,
-          match: match,
-          status: 0,
-          username: selectedUser.username,
-          matchname: match.matchName,
-          matchid: match.id
-        };
-
-        registerParticipant(participant).then(result => {
-          match.participants.push(result.data);
-          setShow(false);
-          setSelectedUsers([]);
-          getMatch();
-          resolve(match);
+      if(selectedUsers.length > getArrayVagas(match?.amountVacancies).length) {
+        setSelectedUsers([]);
+        setShow(false);
+        alert('Vagas insuficientes', 'danger');
+      } else {
+        selectedUsers.forEach(selectedUser => {
+          let participant = {
+            name: selectedUser.name,
+            phone: selectedUser.phone,
+            match: match,
+            status: 0,
+            username: selectedUser.username,
+            matchname: match.matchName,
+            matchid: match.id
+          };
+  
+          registerParticipant(participant).then(result => {
+            match.participants.push(result.data);
+            setShow(false);
+            setSelectedUsers([]);
+            getMatch();
+            resolve(match);
+          });
         });
-      });
+      }
     });
   }
 
@@ -175,6 +188,20 @@ const Event = () => {
     return icon;
   }
 
+  const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+
+  const alert = (message, type) => {
+      const wrapper = document.createElement('div')
+      wrapper.innerHTML = [
+          `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+          `   <div>${message}</div>`,
+          '   <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>',
+          '</div>'
+      ].join('')
+
+      alertPlaceholder.append(wrapper)
+  }
+
   return (
     <>
       <CRow>
@@ -229,6 +256,7 @@ const Event = () => {
             </CCardBody>
           </CCard>
         </CCol>
+        
       </CRow>
       <Modal aria-labelledby="example-custom-modal-styling-title" dialogClassName="modal-50g" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
