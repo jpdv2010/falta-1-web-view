@@ -14,7 +14,7 @@ import { cilMenu, cilExitToApp, cilBellExclamation, cilBell } from '@coreui/icon
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { useEffect } from 'react'
-import { deleteParticipant, getPendentParticipants, updateParticipant } from '../utils/service/ParticipantService'
+import { deleteParticipant, getPendentParticipants, registerParticipant } from '../utils/service/ParticipantService'
 import { getMatchById } from '../utils/service/MatchService'
 import { useNavigate } from 'react-router-dom'
 
@@ -41,8 +41,19 @@ const AppHeader = () => {
     getMatchById(item.matchid).then(result => {
       item.match = result.data;
       item.status = 1;
+
+      let newParticipant = {
+        match: result.data,
+        status: 1,
+        matchid: result.data.id,
+        matchname: result.data.matchName,
+        phone: item.phone,
+        username: item.username,
+        name: item.name
+      };
+
       deleteParticipant(item.id).then((result)=> {
-        registerParticipant(item).then(result => {
+        registerParticipant(newParticipant).then(result => {
           navigate('/event/' + item.matchid, {state: { rld: true}});
         })
       });
