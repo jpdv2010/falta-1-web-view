@@ -31,6 +31,9 @@ import {
 import { getMatchById, updateMatch } from '../../utils/service/MatchService';
 import { getAllUsers, getUserByUsername } from '../../utils/service/UserService';
 import { deleteParticipant, registerParticipant } from '../../utils/service/ParticipantService';
+import fontawesome from '@fortawesome/fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCrown } from '@fortawesome/free-solid-svg-icons'
 
 const Event = () => {
   const [match, setMatch] = useState(undefined);
@@ -57,6 +60,8 @@ const Event = () => {
   const [complement, setComplement] = React.useState(undefined);
 
   const navigate = useNavigate();
+
+  fontawesome.library.add(faCrown);
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -359,7 +364,7 @@ const Event = () => {
                         <CCardBody>
                           <CCardText style={{padding: '8px'}}>
                             <div class="btn-searsh-participant-container">
-                              <CIcon icon={cilBadge} size="xl"/>
+                              <FontAwesomeIcon icon="fa-crown" style={{width:'1.5rem', height:'1.5rem', fontSize:'1.5rem'}}/>
                             </div>
                           </CCardText>
                         </CCardBody>
