@@ -88,3 +88,8 @@ button.btn.btn-success {
     transition: inherit;
     margin-left: -1rem;
 }
+
+.simplebar-content-wrapper {
+    overflow: auto !important;
+    max-height: 80vh;
+}
