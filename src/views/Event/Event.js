@@ -16,7 +16,7 @@ import {
   CFormLabel
 } from '@coreui/react'
 import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant, Alert } from '../../components'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { cilUser, cilSearch, cilBadge, cilFootball, cilTennisBall, cilBasketball } from '@coreui/icons'
@@ -55,6 +55,8 @@ const Event = () => {
   const [number, setNumber] = React.useState(undefined);
   const [zipCode, setZip] = React.useState(undefined);
   const [complement, setComplement] = React.useState(undefined);
+
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -232,8 +234,20 @@ const Event = () => {
     setShowAlert(true);
   }
 
-  const handleSubmit = (edittingMatch) => {
-    updateMatch(edittingMatch);
+  const handleSubmit = (event) => {
+    let edittingMatch = match;
+    edittingMatch.matchName = matchName;
+    edittingMatch.amountVacancies = amountVacancies;
+    edittingMatch.sport = sport;
+    edittingMatch.address.city = city;
+    edittingMatch.address.district = district;
+    edittingMatch.address.street = street;
+    edittingMatch.address.number = number;
+    edittingMatch.address.zipCode = zipCode;
+    edittingMatch.address.complement = complement;
+    updateMatch(edittingMatch).then(res => {
+      navigate('/event/' + res.data.id, {state: { rld: true}});
+    });
   }
 
   return (
