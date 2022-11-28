@@ -78,3 +78,13 @@ button.btn.btn-success {
 .modal-50g {
     height: 50%;
 }
+
+.icon-nav {
+    flex: 0 0 4rem;
+    font-size: 1.25rem;
+    color: var(--cui-sidebar-nav-link-icon-color, rgba(255, 255, 255, 0.6));
+    text-align: center;
+    fill: currentColor;
+    transition: inherit;
+    margin-left: -1rem;
+}
