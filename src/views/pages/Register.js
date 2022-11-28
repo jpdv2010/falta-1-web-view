@@ -49,7 +49,7 @@ const Register = () => {
       .then(res => {
         navigate('/login');
       }).catch(function (error) {
-          alert(error.message, 'danger');
+          alert(error.response.data.message, 'danger');
       })
   }
 

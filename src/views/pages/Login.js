@@ -54,7 +54,6 @@ const Login = ({ logout }) => {
                 if (error.response.status == 401) {
                     alert("Usuário ou senha incorretos!", 'danger')
                 }
-                console.log(error);
             });
         }
     }

@@ -17,6 +17,7 @@ import {
 import { registerMatch } from '../../utils/service/MatchService';
 import { getUserByUsername } from '../../utils/service/UserService';
 import { useNavigate } from 'react-router-dom';
+import { Alert } from '../../components';
 
 const AddEvent = () => {
     const [schedule, setSchedule] = React.useState(new Date());
@@ -30,6 +31,9 @@ const AddEvent = () => {
     const [zipCode, setZip] = React.useState(undefined);
     const [complement, setComplement] = React.useState(undefined);
     const navigate = useNavigate();
+    const [alertType, setAlertType] = React.useState('warning');
+    const [alertMessage, setAlertMessage] = React.useState('');
+    const [showAlert, setShowAlert] = React.useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -57,10 +61,16 @@ const AddEvent = () => {
                 .then(res => {
                     navigate('/event/' + res.data.id, {state: { rld: true}});
                 }).catch(function (error) {
-                    console.log(error);
+                    alert(error.response.data.message, 'danger');
                 })
         })
     }
+
+    const alert = (message, type) => {
+        setAlertMessage(message);
+        setAlertType(type);
+        setShowAlert(true);
+      }
 
     return (
         <div className="bg-light min-vh-50 d-flex flex-row align-items-center">
@@ -137,6 +147,7 @@ const AddEvent = () => {
                     </CCol>
                 </CForm>
             </CCardBody>
+            <Alert showAlert={showAlert} alertType={alertType} alertMessage={alertMessage} setShowAlert={setShowAlert}></Alert>
         </div>
     )
 }

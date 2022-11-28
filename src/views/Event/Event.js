@@ -16,7 +16,7 @@ import {
   CFormLabel
 } from '@coreui/react'
 import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant, Alert } from '../../components'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { cilUser, cilSearch, cilBadge, cilFootball, cilTennisBall, cilBasketball } from '@coreui/icons'
@@ -57,6 +57,7 @@ const Event = () => {
   const [complement, setComplement] = React.useState(undefined);
 
   const navigate = useNavigate();
+  const {state} = useLocation();
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -118,10 +119,11 @@ const Event = () => {
   useEffect(() => {
     setConfig(params['*'].includes('event/config'));
     setCurrentUserName(localStorage.getItem('user-name'));
-    if(params.id != match?.id) {
+    if(params.id != match?.id || state?.rld) {
       getMatchById(params.id).then(result => {
         setMatch(result.data);
         updateFormData(result.data);
+        if(state)state.rld = false;
       });
     }
   });
@@ -239,7 +241,10 @@ const Event = () => {
   }
 
   const handleSubmit = (event) => {
-    let edittingMatch = match;
+    let edittingMatch = {
+      address: {}
+    };
+    edittingMatch.id = match.id;
     edittingMatch.schedule = schedule;
     edittingMatch.matchName = matchName;
     edittingMatch.amountVacancies = amountVacancies;
@@ -250,8 +255,12 @@ const Event = () => {
     edittingMatch.address.number = number;
     edittingMatch.address.zipCode = zipCode;
     edittingMatch.address.complement = complement;
+    edittingMatch.creator = match.creator;
+    
     updateMatch(edittingMatch).then(res => {
       navigate('/event/' + res.data.id, {state: { rld: true}});
+    }).catch(error => {
+      alert(error.response.data.message, 'danger');
     });
   }
 
