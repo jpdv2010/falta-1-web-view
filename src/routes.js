@@ -8,6 +8,7 @@ const routes = [
     { path: '/', exact: true, name: 'Home' },
     { path: '/event/:id', exact: true, name: 'Detalhes do Usuário', element: Event },
     { path: '/new-event', exact: true, name: 'Cadastrar Evento', element: AddEvent},
-    { path: '/searsh-event/:page', exact: true, name: 'Procurar Evento', element: SearshEvent}
+    { path: '/searsh-event/:page', exact: true, name: 'Procurar Evento', element: SearshEvent},
+    { path: '/event/config/:id', exact: true, name: 'Detalhes do Usuário', element: Event },
 ]
 export default routes

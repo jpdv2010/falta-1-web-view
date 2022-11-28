@@ -4,14 +4,16 @@ import {
   CCardBody,
   CCardHeader,
   CCardText,
-  CCardTitle,
   CCol,
   CRow,
   CWidgetStatsF,
   CFormCheck,
   CInputGroup,
+  CButton,
+  CForm,
   CFormInput,
-  CButton
+  CFormSelect,
+  CFormLabel
 } from '@coreui/react'
 import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant, Alert } from '../../components'
 import { useParams } from 'react-router-dom';
@@ -19,9 +21,14 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { cilUser, cilSearch, cilBadge, cilFootball, cilTennisBall, cilBasketball } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 //TODO alterar busca de dados para utilizar as informações da api
-import { getMatchById } from '../../utils/service/MatchService';
+import { getMatchById, updateMatch } from '../../utils/service/MatchService';
 import { getAllUsers, getUserByUsername } from '../../utils/service/UserService';
 import { deleteParticipant, registerParticipant } from '../../utils/service/ParticipantService';
 
@@ -36,6 +43,18 @@ const Event = () => {
   const [alertType, setAlertType] = useState('warning');
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+  const [config, setConfig] = useState(false);
+
+  const [schedule, setSchedule] = React.useState(undefined);
+  const [matchName, setMatchName] = React.useState("");
+  const [amountVacancies, setAmountVacancies] = React.useState(0);
+  const [sport, setSport] = React.useState(undefined);
+  const [city, setCity] = React.useState(undefined);
+  const [district, setDistrict] = React.useState(undefined);
+  const [street, setStreet] = React.useState(undefined);
+  const [number, setNumber] = React.useState(undefined);
+  const [zipCode, setZip] = React.useState(undefined);
+  const [complement, setComplement] = React.useState(undefined);
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -77,14 +96,30 @@ const Event = () => {
   const getMatch = () => {
     getMatchById(params.id).then(result => {
       setMatch(result.data);
+      updateFormData(result.data);
     });
   }
 
+  const updateFormData = (currentMatch) => {
+      setSchedule(currentMatch.schedule);
+      setMatchName(currentMatch.matchName);
+      setAmountVacancies(currentMatch.amountVacancies);
+      setSport(currentMatch.sport);
+      setCity(currentMatch.address.city);
+      setDistrict(currentMatch.address.district);
+      setStreet(currentMatch.address.street);
+      setNumber(currentMatch.address.number);
+      setZip(currentMatch.address.zipCode);
+      setComplement(currentMatch.address.complement);
+  }
+
   useEffect(() => {
+    setConfig(params['*'].includes('event/config'));
     setCurrentUserName(localStorage.getItem('user-name'));
     if(params.id != match?.id) {
       getMatchById(params.id).then(result => {
         setMatch(result.data);
+        updateFormData(result.data);
       });
     }
   });
@@ -197,56 +232,133 @@ const Event = () => {
     setShowAlert(true);
   }
 
+  const handleSubmit = (edittingMatch) => {
+    updateMatch(edittingMatch);
+  }
+
   return (
     <>
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>Partida</strong> <small>{match?.date}</small>
+              <strong>{match?.matchName}</strong> <small>{match?.date}</small>
             </CCardHeader>
             <CCardBody>
               <h3>{match?.name}</h3>
               <p className="text-medium-emphasis small">
                 {getAddressText(match?.address)}
               </p>
-              <DocsExample href="components/card/#background-and-color">
-                <CRow>
-                  <CCol lg={4}>
-                    <CCard color={'info'} textColor={'white'} className="mb-3">
-                      <CCardHeader>{currentUsername == match?.creator.username? 'Você (Criador)' : match?.creator.name + ' (Criador)'}</CCardHeader>
-                      <CCardBody>
-                        <CCardText style={{padding: '8px'}}>
-                          <div class="btn-searsh-participant-container">
-                            <CIcon icon={cilBadge} size="xl"/>
-                          </div>
-                        </CCardText>
-                      </CCardBody>
-                    </CCard>
-                  </CCol>
-                  {match?.participants?.map((item, index) => (
-                    <CCol lg={4} key={index}>
-                      <CCard color={getColor(item.status)} textColor={'white'} className="mb-3">
-                        <CCardHeader>{item.username == currentUsername? item.name + ' (Você)' : item.status == 'PENDENT'? item.name + ' (Pendente)' : item.name}</CCardHeader>
+              <DocsExample href="components/card/#background-and-color" matchId={match?.id} isMatchCreator={match?.creator.username == currentUsername}>
+                {config? 
+                    <CCardBody>
+                      <CForm onSubmit={(event) => handleSubmit(event)} className="row g-3">
+                        <CCol md={6}>
+                          <CFormLabel htmlFor="inputEmail4">Nome</CFormLabel>
+                          <CFormInput placeholder="Nome" autoComplete="name" type="text" onChange={(event) => { setMatchName(event.target?.value) }} value={matchName} />
+                        </CCol>
+                        <CCol md={3}>
+                          <CFormLabel htmlFor="inputPassword4">Data</CFormLabel>
+                          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                              disableToolbar
+                              variant="inline"
+                              format="dd/MM/yyyy"
+                              margin="normal"
+                              id="date-picker-inline"
+                              value={schedule}
+                              onChange={(value) => { setSchedule(value) }}
+                              KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                              }}
+                            />
+                          </MuiPickersUtilsProvider>
+                        </CCol>
+                        <CCol xs={3}>
+                          <CFormLabel htmlFor="inputAddress">Quantidade de Participantes</CFormLabel>
+                          <CFormInput
+                            type="number"
+                            placeholder="Quantidade de Participantes"
+                            onChange={(event) => { setAmountVacancies(event.target?.value) }}
+                          />
+                        </CCol>
+                        <CCol md={6}>
+                          <CFormLabel htmlFor="inputState">Esporte</CFormLabel>
+                          <CFormSelect id="inputGroupSelect01" onChange={(event) => { setSport(event.target?.value) }} value={sport} >
+                            <option>Esporte...</option>
+                            <option value="SOCCER">Futebol</option>
+                            <option value="VOLLEYBALL">Vôlei</option>
+                            <option value="BEACH_TENNIS">Beach Tenis</option>
+                            <option value="BASKETBALL">Basquete</option>
+                            <option value="HANDBALL">Handball</option>
+                            <option value="TENNIS">Tênis</option>
+                          </CFormSelect>
+                        </CCol>
+                        <CCol md={6}>
+                          <CFormLabel htmlFor="inputEmail4">Cidade</CFormLabel>
+                          <CFormInput placeholder="Cidade" autoComplete="city" type="text" onChange={(event) => { setCity(event.target?.value) }} value={city} />
+                        </CCol>
+                        <CCol md={6}>
+                          <CFormLabel htmlFor="inputEmail4">Bairro</CFormLabel>
+                          <CFormInput placeholder="Bairro" autoComplete="district" type="text" onChange={(event) => { setDistrict(event.target?.value) }} value={district} />
+                        </CCol>
+                        <CCol md={4}>
+                          <CFormLabel htmlFor="inputEmail4">Rua</CFormLabel>
+                          <CFormInput placeholder="Rua" autoComplete="street" type="text" onChange={(event) => { setStreet(event.target?.value) }} value={street} />
+                        </CCol>
+                        <CCol md={2}>
+                          <CFormLabel htmlFor="inputEmail4">Número</CFormLabel>
+                          <CFormInput placeholder="Número" autoComplete="number" type="number" onChange={(event) => { setNumber(event.target?.value) }} value={number} />
+                        </CCol>
+                        <CCol md={6}>
+                          <CFormLabel htmlFor="inputEmail4">Código Postal</CFormLabel>
+                          <CFormInput placeholder="Código Postal" autoComplete="zipCode" type="text" onChange={(event) => { setZip(event.target?.value) }} value={zipCode} />
+                        </CCol>
+                        <CCol md={6}>
+                          <CFormLabel htmlFor="inputEmail4">Complemento</CFormLabel>
+                          <CFormInput placeholder="Complemento" autoComplete="complement" type="text" onChange={(event) => { setComplement(event.target?.value) }} value={complement} />
+                        </CCol>
+                        <CCol xs={12}>
+                          <CButton type="submit">Salvar</CButton>
+                        </CCol>
+                      </CForm>
+                    </CCardBody> : <CRow>
+                    <CCol lg={4}>
+                      <CCard color={'info'} textColor={'white'} className="mb-3">
+                        <CCardHeader>{currentUsername == match?.creator.username? 'Você (Criador)' : match?.creator.name + ' (Criador)'}</CCardHeader>
                         <CCardBody>
-                          <CCardText>
-                              {match?.creator?.username == currentUsername? <BtnDeleteParticipant onClick={event => clickDeleteParticipant(item.id)}/> : <CCardText style={{padding: '8px'}}><div class="btn-searsh-participant-container">{getIconBySport(match.sport)}</div></CCardText>}
+                          <CCardText style={{padding: '8px'}}>
+                            <div class="btn-searsh-participant-container">
+                              <CIcon icon={cilBadge} size="xl"/>
+                            </div>
                           </CCardText>
                         </CCardBody>
                       </CCard>
                     </CCol>
-                  ))}
-                  {match?.creator?.username == currentUsername? getArrayVagas(match?.amountVacancies)?.map((item, index) => (
-                    <CCol lg={4} key={index}>
-                      <CCard color='success' textColor={'white'} className="mb-3">
-                        <CCardHeader>Adicionar Participante</CCardHeader>
-                        <CCardBody>
-                          <BtnSearshParticipant onClick={event => handleShow()} />
-                        </CCardBody>
-                      </CCard>
-                    </CCol>
-                  )) : <></>}
-                </CRow>
+                    {match?.participants?.map((item, index) => (
+                      <CCol lg={4} key={index}>
+                        <CCard color={getColor(item.status)} textColor={'white'} className="mb-3">
+                          <CCardHeader>{item.username == currentUsername? item.name + ' (Você)' : item.status == 'PENDENT'? item.name + ' (Pendente)' : item.name}</CCardHeader>
+                          <CCardBody>
+                            <CCardText>
+                                {match?.creator?.username == currentUsername? <BtnDeleteParticipant onClick={event => clickDeleteParticipant(item.id)}/> : <CCardText style={{padding: '8px'}}><div class="btn-searsh-participant-container">{getIconBySport(match.sport)}</div></CCardText>}
+                            </CCardText>
+                          </CCardBody>
+                        </CCard>
+                      </CCol>
+                    ))}
+                    {match?.creator?.username == currentUsername? getArrayVagas(match?.amountVacancies)?.map((item, index) => (
+                      <CCol lg={4} key={index}>
+                        <CCard color='success' textColor={'white'} className="mb-3">
+                          <CCardHeader>Adicionar Participante</CCardHeader>
+                          <CCardBody>
+                            <BtnSearshParticipant onClick={event => handleShow()} />
+                          </CCardBody>
+                        </CCard>
+                      </CCol>
+                    )) : <></>}
+                  </CRow>
+                }
               </DocsExample>
             </CCardBody>
           </CCard>
