@@ -15,6 +15,7 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilPhone } from '@coreui/icons'
 import { registerUser } from '../../utils/service/UserService'
 import { useNavigate } from 'react-router-dom';
+import { Alert } from '../../components'
 
 const Register = () => {
   const [username, setUsername] = React.useState("");
@@ -23,9 +24,18 @@ const Register = () => {
   const [password2, setPassword2] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const navigate = useNavigate();
+  const [alertType, setAlertType] = React.useState('warning');
+  const [alertMessage, setAlertMessage] = React.useState('');
+  const [showAlert, setShowAlert] = React.useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if(password != password2) {
+      alert('Senhas não correspondenttes', 'danger');
+      return;
+    }
+
     let data = {
       username: username,
       password: password,
@@ -39,8 +49,14 @@ const Register = () => {
       .then(res => {
         navigate('/login');
       }).catch(function (error) {
-          console.log(error);
+          alert(error.message, 'danger');
       })
+  }
+
+  const alert = (message, type) => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setShowAlert(true);
   }
 
   return (
@@ -102,6 +118,7 @@ const Register = () => {
             </CCard>
           </CCol>
         </CRow>
+        <Alert showAlert={showAlert} alertType={alertType} alertMessage={alertMessage} setShowAlert={setShowAlert}></Alert>
       </CContainer>
     </div>
   )

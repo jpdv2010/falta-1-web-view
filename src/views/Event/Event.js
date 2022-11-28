@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   CCard,
   CCardBody,
@@ -13,7 +13,7 @@ import {
   CFormInput,
   CButton
 } from '@coreui/react'
-import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant } from '../../components'
+import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant, Alert } from '../../components'
 import { useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -26,13 +26,16 @@ import { getAllUsers, getUserByUsername } from '../../utils/service/UserService'
 import { deleteParticipant, registerParticipant } from '../../utils/service/ParticipantService';
 
 const Event = () => {
-  const [match, setMatch] = React.useState(undefined);
+  const [match, setMatch] = useState(undefined);
   const params = useParams()
-  const [show, setShow] = React.useState(false);
-  const [users, setUsers] = React.useState([]);
-  const [selectedUsers, setSelectedUsers] = React.useState([]);
-  const [currentUsername, setCurrentUserName] = React.useState(undefined);
-  const [findUserField, setFindUserField] = React.useState(undefined);
+  const [show, setShow] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [currentUsername, setCurrentUserName] = useState(undefined);
+  const [findUserField, setFindUserField] = useState(undefined);
+  const [alertType, setAlertType] = useState('warning');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -188,18 +191,10 @@ const Event = () => {
     return icon;
   }
 
-  const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-
   const alert = (message, type) => {
-      const wrapper = document.createElement('div')
-      wrapper.innerHTML = [
-          `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-          `   <div>${message}</div>`,
-          '   <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>',
-          '</div>'
-      ].join('')
-
-      alertPlaceholder.append(wrapper)
+    setAlertMessage(message);
+    setAlertType(type);
+    setShowAlert(true);
   }
 
   return (
@@ -255,8 +250,8 @@ const Event = () => {
               </DocsExample>
             </CCardBody>
           </CCard>
+          <Alert showAlert={showAlert} alertType={alertType} alertMessage={alertMessage} setShowAlert={setShowAlert}></Alert>
         </CCol>
-        
       </CRow>
       <Modal aria-labelledby="example-custom-modal-styling-title" dialogClassName="modal-50g" show={show} onHide={handleClose}>
         <Modal.Header closeButton>

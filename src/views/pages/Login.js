@@ -17,11 +17,15 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom';
 import { getUserByUsername, login } from '../../utils/service/UserService'
+import { Alert } from '../../components'
 
 const Login = ({ logout }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const [alertType, setAlertType] = useState('warning');
+    const [alertMessage, setAlertMessage] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -64,17 +68,10 @@ const Login = ({ logout }) => {
         }
     })
 
-
     const alert = (message, type) => {
-        const wrapper = document.createElement('div')
-        wrapper.innerHTML = [
-            `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-            `   <div>${message}</div>`,
-            '   <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>',
-            '</div>'
-        ].join('')
-
-        alertPlaceholder.append(wrapper)
+        setAlertMessage(message);
+        setAlertType(type);
+        setShowAlert(true);
     }
 
     return (
@@ -120,7 +117,7 @@ const Login = ({ logout }) => {
                                         </CRow>
                                     </CForm>
                                 </CCardBody>
-                                <div id="liveAlertPlaceholder"></div>
+                                <Alert showAlert={showAlert} alertType={alertType} alertMessage={alertMessage} setShowAlert={setShowAlert}></Alert>
                             </CCard>
                         </CCardGroup>
                     </CCol>
