@@ -183,9 +183,13 @@ const Event = () => {
     }
   }
 
-  const clickDeleteParticipant = (id) => {
+  const clickDeleteParticipant = (id, username) => {
     deleteParticipant(id).then(result => {
-      getMatch();
+      if(currentUsername == username) {
+        navigate('/dashboard', {state: { rld: true}});
+      } else {
+        getMatch();
+      }
     });
   }
 
@@ -357,7 +361,7 @@ const Event = () => {
                           <CCardHeader>{item.username == currentUsername? item.name + ' (Você)' : item.status == 'PENDENT'? item.name + ' (Pendente)' : item.name}</CCardHeader>
                           <CCardBody>
                             <CCardText>
-                                {match?.creator?.username == currentUsername? <BtnDeleteParticipant onClick={event => clickDeleteParticipant(item.id)}/> : <CCardText style={{padding: '8px'}}><div class="btn-searsh-participant-container">{getIconBySport(match.sport)}</div></CCardText>}
+                                {match?.creator?.username == currentUsername || currentUsername == item.username? <BtnDeleteParticipant onClick={event => clickDeleteParticipant(item.id, item.username)}/> : <CCardText style={{padding: '8px'}}><div class="btn-searsh-participant-container">{getIconBySport(match.sport)}</div></CCardText>}
                             </CCardText>
                           </CCardBody>
                         </CCard>
