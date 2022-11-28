@@ -279,6 +279,7 @@ const Event = () => {
                           <CFormInput
                             type="number"
                             placeholder="Quantidade de Participantes"
+                            value={amountVacancies}
                             onChange={(event) => { setAmountVacancies(event.target?.value) }}
                           />
                         </CCol>
