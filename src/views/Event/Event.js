@@ -45,7 +45,7 @@ const Event = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [config, setConfig] = useState(false);
 
-  const [schedule, setSchedule] = React.useState(undefined);
+  const [schedule, setSchedule] = React.useState(new Date());
   const [matchName, setMatchName] = React.useState("");
   const [amountVacancies, setAmountVacancies] = React.useState(0);
   const [sport, setSport] = React.useState(undefined);
@@ -236,7 +236,7 @@ const Event = () => {
 
   const handleSubmit = (event) => {
     let edittingMatch = match;
-    edditingMatch.schedule = schedule;
+    edittingMatch.schedule = schedule;
     edittingMatch.matchName = matchName;
     edittingMatch.amountVacancies = amountVacancies;
     edittingMatch.sport = sport;

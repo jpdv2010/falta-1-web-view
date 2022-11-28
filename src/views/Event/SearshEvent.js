@@ -25,7 +25,7 @@ const SearshEvent = () => {
     const [filtered, setFiltered] = React.useState(false);
     const [sport, setSport] = React.useState(undefined);
     const [matchName, setMatchName] = React.useState(undefined);
-    const [schedule, setSchedule] = React.useState(undefined);
+    const [schedule, setSchedule] = React.useState(new Date());
     const [events, setEvents] = React.useState(undefined);
     const navigate = useNavigate();
     const [searsh, setSearsh] = React.useState(false);

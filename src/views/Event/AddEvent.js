@@ -19,7 +19,7 @@ import { getUserByUsername } from '../../utils/service/UserService';
 import { useNavigate } from 'react-router-dom';
 
 const AddEvent = () => {
-    const [schedule, setSchedule] = React.useState(undefined);
+    const [schedule, setSchedule] = React.useState(new Date());
     const [matchName, setMatchName] = React.useState("");
     const [amountVacancies, setAmountVacancies] = React.useState(0);
     const [sport, setSport] = React.useState(undefined);
