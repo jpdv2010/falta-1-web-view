@@ -236,6 +236,7 @@ const Event = () => {
 
   const handleSubmit = (event) => {
     let edittingMatch = match;
+    edditingMatch.schedule = schedule;
     edittingMatch.matchName = matchName;
     edittingMatch.amountVacancies = amountVacancies;
     edittingMatch.sport = sport;
