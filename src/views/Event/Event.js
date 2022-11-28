@@ -16,7 +16,7 @@ import {
   CFormLabel
 } from '@coreui/react'
 import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant, Alert } from '../../components'
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { cilUser, cilSearch, cilBadge, cilFootball, cilTennisBall, cilBasketball } from '@coreui/icons'
@@ -57,7 +57,6 @@ const Event = () => {
   const [complement, setComplement] = React.useState(undefined);
 
   const navigate = useNavigate();
-  const {state} = useLocation();
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -119,7 +118,7 @@ const Event = () => {
   useEffect(() => {
     setConfig(params['*'].includes('event/config'));
     setCurrentUserName(localStorage.getItem('user-name'));
-    if(params.id != match?.id || state?.rld) {
+    if(params.id != match?.id) {
       getMatchById(params.id).then(result => {
         setMatch(result.data);
         updateFormData(result.data);
@@ -130,7 +129,7 @@ const Event = () => {
 
   const getArrayVagas = (qtdParticipantes) => {
     if (match) {
-      let size = qtdParticipantes - match.participants.length -1;
+      let size = qtdParticipantes - match.participants?.length -1;
       var vagas = [];
       for (var i = 0; i < size; i++) {
         vagas.push({ vaga: 'Adicionar Participante' })
@@ -258,7 +257,10 @@ const Event = () => {
     edittingMatch.creator = match.creator;
     
     updateMatch(edittingMatch).then(res => {
-      navigate('/event/' + res.data.id, {state: { rld: true}});
+      getMatchById(res.data.id).then(editedMatch => {
+        setMatch(editedMatch.data);
+        navigate('/event/' + res.data.id, {state: { rld: true}});
+      })
     }).catch(error => {
       alert(error.response.data.message, 'danger');
     });
