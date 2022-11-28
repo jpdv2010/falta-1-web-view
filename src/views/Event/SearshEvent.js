@@ -73,7 +73,7 @@ const SearshEvent = () => {
     }
 
     const gotoFilter = () => {
-        setSchedule(undefined);
+        setSchedule(new Date());
         setMatchName(undefined);
         setSport(undefined);
         setFiltered(false);
