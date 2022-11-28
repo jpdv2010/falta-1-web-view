@@ -18,6 +18,7 @@ import { getUserByUsername } from '../../utils/service/UserService';
 import { registerParticipant } from '../../utils/service/ParticipantService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import { Alert } from '../../components';
 
 const SearshEvent = () => {
     const params = useParams();
@@ -29,6 +30,9 @@ const SearshEvent = () => {
     const navigate = useNavigate();
     const [searsh, setSearsh] = React.useState(false);
     const [pageList, setPageList] = React.useState([]);
+    const [alertType, setAlertType] = React.useState('warning');
+    const [alertMessage, setAlertMessage] = React.useState('');
+    const [showAlert, setShowAlert] = React.useState(false);
 
     const getVagasRestantes = (item) => {
         let size = item.amountVacancies - item.participants.length;
@@ -113,18 +117,10 @@ const SearshEvent = () => {
         return aPage == params.page;
     }
 
-    const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-
     const alert = (message, type) => {
-        const wrapper = document.createElement('div')
-        wrapper.innerHTML = [
-            `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-            `   <div>${message}</div>`,
-            '   <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>',
-            '</div>'
-        ].join('')
-
-        alertPlaceholder.append(wrapper)
+        setAlertMessage(message);
+        setAlertType(type);
+        setShowAlert(true);
     }
 
     return (
@@ -209,7 +205,6 @@ const SearshEvent = () => {
                         </CCard>
                     </CCol>
                 ))}
-                <div id="liveAlertPlaceholder"></div>
                 <nav aria-label="...">
                     <ul class="pagination justify-content-center" style={{position: 'fixed', bottom: '0px'}}>
                         <li class={params.page == 0? "page-item disabled" : "page-item"} onClick={event => setSearsh(true)}>
@@ -217,13 +212,14 @@ const SearshEvent = () => {
                         </li>
                         {pageList?.map((item, index) => (
                             <li class={isActive(index)? "page-item active" : "page-item"} onClick={event => setSearsh(true)}><a class="page-link" href={'#/searsh-event/' + index}>{item.page}</a></li>
-                        ))}
+                            ))}
                         <li class={params.page == pageList.length - 1? "page-item disabled" : "page-item"} onClick={event => setSearsh(true)}>
                             <a class="page-link" href={'#/searsh-event/' + (new Number(params.page) + 1)}>Próximo</a>
                         </li>
                     </ul>
                 </nav>
             </CRow>
+            <Alert showAlert={showAlert} alertType={alertType} alertMessage={alertMessage} setShowAlert={setShowAlert}></Alert>
         </>
     )
 }
