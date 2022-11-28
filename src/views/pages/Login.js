@@ -53,6 +53,8 @@ const Login = ({ logout }) => {
             }).catch(function (error) {
                 if (error.response.status == 401) {
                     alert("Usuário ou senha incorretos!", 'danger')
+                } else {
+                    alert(error.response.data?.message, 'danger');
                 }
             });
         }

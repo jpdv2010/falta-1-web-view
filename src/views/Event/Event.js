@@ -122,7 +122,6 @@ const Event = () => {
       getMatchById(params.id).then(result => {
         setMatch(result.data);
         updateFormData(result.data);
-        if(state)state.rld = false;
       });
     }
   });
