@@ -8,16 +8,10 @@ import {
     CFormSelect,
     CFormLabel
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import DateFnsUtils from '@date-io/date-fns';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
 import { registerMatch } from '../../utils/service/MatchService';
 import { getUserByUsername } from '../../utils/service/UserService';
 import { useNavigate } from 'react-router-dom';
-import { Alert } from '../../components';
+import { Alert, CustomDatePicker } from '../../components';
 
 const AddEvent = () => {
     const [schedule, setSchedule] = React.useState(new Date());
@@ -81,22 +75,9 @@ const AddEvent = () => {
                         <CFormLabel htmlFor="inputEmail4">Nome</CFormLabel>
                         <CFormInput placeholder="Nome" autoComplete="name" type="text" onChange={(event) => {setMatchName(event.target?.value)}} value={matchName} />
                     </CCol>
-                    <CCol md={3}>
+                    <CCol md={4}>
                         <CFormLabel htmlFor="inputPassword4">Data</CFormLabel>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
-                                disableToolbar
-                                variant="inline"
-                                format="dd/MM/yyyy"
-                                margin="normal"
-                                id="date-picker-inline"
-                                value={schedule}
-                                onChange={(value) => {setSchedule(value)}}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                            />
-                        </MuiPickersUtilsProvider>
+                        <CustomDatePicker value={schedule} onChange={(value) => {setSchedule(value)}}></CustomDatePicker>
                     </CCol>
                     <CCol xs={3}>
                         <CFormLabel htmlFor="inputAddress">Quantidade de Participantes</CFormLabel>
@@ -106,7 +87,7 @@ const AddEvent = () => {
                             onChange={(event) => {setAmountVacancies(event.target?.value)}}
                         />
                     </CCol>
-                    <CCol md={6}>
+                    <CCol md={3}>
                         <CFormLabel htmlFor="inputState">Esporte</CFormLabel>
                         <CFormSelect id="inputGroupSelect01" onChange={(event) => {setSport(event.target?.value)}} value={sport} >
                             <option>Esporte...</option>

@@ -6,11 +6,7 @@ import {
     CFormLabel
 } from "@coreui/react"
 import _events from '../../_events';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+
 import CIcon from '@coreui/icons-react';
 import { cilFilter } from '@coreui/icons'
 import { getMatchCount, getMatchPage, updateMatch } from '../../utils/service/MatchService';
@@ -18,7 +14,7 @@ import { getUserByUsername } from '../../utils/service/UserService';
 import { registerParticipant } from '../../utils/service/ParticipantService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Alert } from '../../components';
+import { Alert, CustomDatePicker } from '../../components';
 
 const SearshEvent = () => {
     const params = useParams();
@@ -131,20 +127,7 @@ const SearshEvent = () => {
                     <CForm onSubmit={(event) => handleSubmit(0)} className="row g-3">
                         <CCol md={3}>
                             <CFormLabel htmlFor="inputPassword4">Data</CFormLabel>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDatePicker
-                                    disableToolbar
-                                    variant="inline"
-                                    format="dd/MM/yyyy"
-                                    margin="normal"
-                                    id="date-picker-inline"
-                                    value={schedule}
-                                    onChange={(value) => { setSchedule(value) }}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider>
+                            <CustomDatePicker value={schedule} onChange={(value) => { setSchedule(value) }} />
                         </CCol>
                         <CCol md={3}>
                             <CFormLabel htmlFor="inputState">Esporte</CFormLabel>

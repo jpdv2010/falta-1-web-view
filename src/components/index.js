@@ -7,6 +7,7 @@ import BtnSearshEvent from './BtnSearshEvent'
 import BtnSearshParticipant from './BtnSearshParticipant'
 import BtnDeleteParticipant from './BtnDeleteParticipant'
 import Alert from './Alert'
+import CustomDatePicker from './CustomDatePicker'
 
 export {
   AppContent,
@@ -17,5 +18,6 @@ export {
   BtnSearshEvent,
   BtnSearshParticipant,
   BtnDeleteParticipant,
-  Alert
+  Alert,
+  CustomDatePicker
 }

@@ -15,17 +15,12 @@ import {
   CFormSelect,
   CFormLabel
 } from '@coreui/react'
-import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant, Alert } from '../../components'
+import { BtnSearshParticipant, DocsExample, BtnDeleteParticipant, Alert, CustomDatePicker } from '../../components'
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { cilUser, cilSearch, cilBadge, cilFootball, cilTennisBall, cilBasketball } from '@coreui/icons'
+import { cilUser, cilSearch, cilFootball, cilTennisBall, cilBasketball } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import DateFnsUtils from '@date-io/date-fns';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
 
 //TODO alterar busca de dados para utilizar as informações da api
 import { getMatchById, updateMatch } from '../../utils/service/MatchService';
@@ -33,7 +28,8 @@ import { getAllUsers, getUserByUsername } from '../../utils/service/UserService'
 import { deleteParticipant, registerParticipant } from '../../utils/service/ParticipantService';
 import fontawesome from '@fortawesome/fontawesome'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCrown } from '@fortawesome/free-solid-svg-icons'
+import { faCrown, faCalendarDays } from '@fortawesome/free-solid-svg-icons'
+import DateTimePicker from 'react-datetime-picker';
 
 const Event = () => {
   const [match, setMatch] = useState(undefined);
@@ -61,7 +57,7 @@ const Event = () => {
 
   const navigate = useNavigate();
 
-  fontawesome.library.add(faCrown);
+  fontawesome.library.add(faCrown,faCalendarDays);
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -108,7 +104,7 @@ const Event = () => {
   }
 
   const updateFormData = (currentMatch) => {
-      setSchedule(currentMatch.schedule);
+      setSchedule(typeof currentMatch.schedule === "string"? new Date(currentMatch.schedule) : currentMatch.schedule);
       setMatchName(currentMatch.matchName);
       setAmountVacancies(currentMatch.amountVacancies);
       setSport(currentMatch.sport);
@@ -263,7 +259,7 @@ const Event = () => {
     updateMatch(edittingMatch).then(res => {
       getMatchById(res.data.id).then(editedMatch => {
         setMatch(editedMatch.data);
-        navigate('/event/' + res.data.id, {state: { rld: true}});
+        navigate('/event/' + editedMatch.id, {state: { rld: true}});
       })
     }).catch(error => {
       alert(error.response.data.message, 'danger');
@@ -291,22 +287,9 @@ const Event = () => {
                           <CFormLabel htmlFor="inputEmail4">Nome</CFormLabel>
                           <CFormInput placeholder="Nome" autoComplete="name" type="text" onChange={(event) => { setMatchName(event.target?.value) }} value={matchName} />
                         </CCol>
-                        <CCol md={3}>
+                        <CCol md={4}>
                           <CFormLabel htmlFor="inputPassword4">Data</CFormLabel>
-                          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
-                              disableToolbar
-                              variant="inline"
-                              format="dd/MM/yyyy"
-                              margin="normal"
-                              id="date-picker-inline"
-                              value={schedule}
-                              onChange={(value) => { setSchedule(value) }}
-                              KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                              }}
-                            />
-                          </MuiPickersUtilsProvider>
+                          <CustomDatePicker onChange={(value) => { setSchedule(value)}} value={schedule}></CustomDatePicker>
                         </CCol>
                         <CCol xs={3}>
                           <CFormLabel htmlFor="inputAddress">Quantidade de Participantes</CFormLabel>
@@ -317,7 +300,7 @@ const Event = () => {
                             onChange={(event) => { setAmountVacancies(event.target?.value) }}
                           />
                         </CCol>
-                        <CCol md={6}>
+                        <CCol md={3}>
                           <CFormLabel htmlFor="inputState">Esporte</CFormLabel>
                           <CFormSelect id="inputGroupSelect01" onChange={(event) => { setSport(event.target?.value) }} value={sport} >
                             <option>Esporte...</option>
