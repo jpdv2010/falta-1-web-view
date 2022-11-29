@@ -259,7 +259,7 @@ const Event = () => {
     updateMatch(edittingMatch).then(res => {
       getMatchById(res.data.id).then(editedMatch => {
         setMatch(editedMatch.data);
-        navigate('/event/' + editedMatch.id, {state: { rld: true}});
+        navigate('/event/' + editedMatch.data.id, {state: { rld: true}});
       })
     }).catch(error => {
       alert(error.response.data.message, 'danger');
