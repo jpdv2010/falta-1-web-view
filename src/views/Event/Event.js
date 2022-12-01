@@ -259,6 +259,8 @@ const Event = () => {
     edittingMatch.address.zipCode = zipCode;
     edittingMatch.address.complement = complement;
     edittingMatch.creator = match.creator;
+    edittingMatch.privateMatch = privateMatch;
+    edittingMatch.whatsappGroupLink = whatsappGroupLink;
     
     updateMatch(edittingMatch).then(res => {
       getMatchById(res.data.id).then(editedMatch => {
