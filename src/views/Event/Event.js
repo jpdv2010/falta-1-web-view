@@ -29,7 +29,7 @@ import { deleteParticipant, registerParticipant } from '../../utils/service/Part
 import fontawesome from '@fortawesome/fontawesome'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown, faCalendarDays } from '@fortawesome/free-solid-svg-icons'
-import DateTimePicker from 'react-datetime-picker';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons'
 
 const Event = () => {
   const [match, setMatch] = useState(undefined);
@@ -54,10 +54,12 @@ const Event = () => {
   const [number, setNumber] = React.useState(undefined);
   const [zipCode, setZip] = React.useState(undefined);
   const [complement, setComplement] = React.useState(undefined);
+  const [privateMatch, setPrivateMatch] = React.useState(new Boolean(false));
+  const [whatsappGroupLink, setWhatsappGroupLink] = React.useState(undefined);
 
   const navigate = useNavigate();
 
-  fontawesome.library.add(faCrown,faCalendarDays);
+  fontawesome.library.add(faCrown,faCalendarDays,faWhatsapp);
 
   const handleClose = () => {
     setSelectedUsers([]);
@@ -114,6 +116,8 @@ const Event = () => {
       setNumber(currentMatch.address.number);
       setZip(currentMatch.address.zipCode);
       setComplement(currentMatch.address.complement);
+      setPrivateMatch(currentMatch.privateMatch);
+      setWhatsappGroupLink(currentMatch.whatsappGroupLink);
   }
 
   useEffect(() => {
@@ -273,6 +277,11 @@ const Event = () => {
           <CCard className="mb-4">
             <CCardHeader>
               <strong>{match?.matchName}</strong> <small>{match?.date}</small>
+              {match?.whatsappGroupLink != undefined?
+                <a href={match.whatsappGroupLink} target="_blank" data-coreui-toggle="tooltip" data-coreui-placement="bottom" title="Juntar-se a grupo no WhatsApp">
+                  <FontAwesomeIcon icon="fa-brands fa-whatsapp" style={{ marginLeft: '5px', width: '1.3rem', height: '1.3rem', fontSize: '1.5rem', cursor: 'pointer', color: 'green' }} />
+                </a> : <></>
+              }
             </CCardHeader>
             <CCardBody>
               <h3>{match?.name}</h3>
@@ -290,6 +299,10 @@ const Event = () => {
                         <CCol md={4}>
                           <CFormLabel htmlFor="inputPassword4">Data</CFormLabel>
                           <CustomDatePicker onChange={(value) => { setSchedule(value)}} value={schedule}></CustomDatePicker>
+                        </CCol>
+                        <CCol md={2} className="form-check form-switch form-switch-lg" style={{paddingLeft:'50px', paddingTop:'36px'}}>
+                            <CFormLabel htmlFor="inputEmail4">Privado</CFormLabel>
+                            <input className="form-check-input custom-form-input" type="checkbox" id="flexSwitchCheckDefaultLg" onChangeCapture={event => setPrivateMatch(event?.currentTarget.checked)} defaultChecked={privateMatch}/>
                         </CCol>
                         <CCol xs={3}>
                           <CFormLabel htmlFor="inputAddress">Quantidade de Participantes</CFormLabel>
@@ -335,6 +348,10 @@ const Event = () => {
                         <CCol md={6}>
                           <CFormLabel htmlFor="inputEmail4">Complemento</CFormLabel>
                           <CFormInput placeholder="Complemento" autoComplete="complement" type="text" onChange={(event) => { setComplement(event.target?.value) }} value={complement} />
+                        </CCol>
+                        <CCol md={6}>
+                            <CFormLabel htmlFor="inputEmail4">Link WhatsApp</CFormLabel>
+                            <CFormInput placeholder="Link WhatsApp" autoComplete="whatsappGroupLink" type="text" onChange={(event) => {setWhatsappGroupLink(event.target?.value)}} value={whatsappGroupLink} />
                         </CCol>
                         <CCol xs={12}>
                           <CButton type="submit">Salvar</CButton>

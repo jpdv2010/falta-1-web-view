@@ -49,6 +49,7 @@ const SearshEvent = () => {
                 matchName: matchName,
                 schedule: schedule,
                 page: params.page,
+                privateMatch: false,
                 size: 5
             };
             

@@ -26,7 +26,7 @@ import 'simplebar/dist/simplebar.min.css'
     >
       <CSidebarNav>
         <CCol xs={12}>
-          <SimpleBar>
+          <SimpleBar style={{maxHeight: '80vh'}}>
             <AppSidebarNav items={navigation} />
           </SimpleBar>
           <CRow>

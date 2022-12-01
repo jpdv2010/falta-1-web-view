@@ -13,7 +13,7 @@ export const getMatchById = (matchId) => {
 }
 
 export const getByUser = (userId) => {
-    return doGet('match/page?creatorId=' + userId, getHeaderAutenticated());
+    return doGet('match/page?size=100&creatorId=' + userId, getHeaderAutenticated());
 }
 
 export const getNavigation = (userId) => {
@@ -64,6 +64,10 @@ export const getMatchPage = (filter) => {
         filterString += '&';
     }
     filterString += 'size=' + filter.size;
+    if(filterString != '') {
+        filterString += '&';
+    }
+    filterString += 'privateMatch=' + filter.privateMatch;
 
     return doGet('match/page?' + filterString, getHeaderAutenticated());
 }

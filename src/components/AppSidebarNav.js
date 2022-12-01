@@ -28,25 +28,25 @@ export const AppSidebarNav = ({ items }) => {
     let icon;
     switch (item.sport) {
       case "SOCCER":
-        icon = <UilFootball class='icon-nav'/>
+        icon = <UilFootball className='icon-nav'/>
         break;
       case "VOLLEYBALL":
-        icon = <UilVolleyball class='icon-nav'/>
+        icon = <UilVolleyball className='icon-nav'/>
         break;
       case "BEACH_TENNIS":
-        icon = <UilFootball class='icon-nav'/>
+        icon = <UilFootball className='icon-nav'/>
         break;
       case "BASKETBALL":
-        icon = <UilBasketball class='icon-nav'/>
+        icon = <UilBasketball className='icon-nav'/>
         break;
       case "HANDBALL":
-        icon = <UilFootball class="icon-nav" />
+        icon = <UilFootball className="icon-nav" />
         break;
       case "TENNIS":
-        icon = <UilTennisBall class='icon-nav'/>
+        icon = <UilTennisBall className='icon-nav'/>
         break;
       default:
-        icon = <UilFootball class='icon-nav'/>
+        icon = <UilFootball className='icon-nav'/>
     }
     return icon;
   }

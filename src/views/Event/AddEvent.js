@@ -6,7 +6,8 @@ import {
     CForm,
     CFormInput,
     CFormSelect,
-    CFormLabel
+    CFormLabel,
+    CFormSwitch
 } from '@coreui/react'
 import { registerMatch } from '../../utils/service/MatchService';
 import { getUserByUsername } from '../../utils/service/UserService';
@@ -28,6 +29,8 @@ const AddEvent = () => {
     const [alertType, setAlertType] = React.useState('warning');
     const [alertMessage, setAlertMessage] = React.useState('');
     const [showAlert, setShowAlert] = React.useState(false);
+    const [privateMatch, setPrivateMatch] = React.useState(new Boolean(false));
+    const [whatsappGroupLink, setWhatsappGroupLink] = React.useState(undefined);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -41,6 +44,8 @@ const AddEvent = () => {
                 creator: response.data,
                 amountVacancies: amountVacancies,
                 sport: sport,
+                privateMatch: privateMatch,
+                whatsappGroupLink: whatsappGroupLink,
                 address: {
                     city: city,
                     district: district,
@@ -64,7 +69,7 @@ const AddEvent = () => {
         setAlertMessage(message);
         setAlertType(type);
         setShowAlert(true);
-      }
+    }
 
     return (
         <div className="bg-light min-vh-50 d-flex flex-row align-items-center">
@@ -78,6 +83,10 @@ const AddEvent = () => {
                     <CCol md={4}>
                         <CFormLabel htmlFor="inputPassword4">Data</CFormLabel>
                         <CustomDatePicker value={schedule} onChange={(value) => {setSchedule(value)}}></CustomDatePicker>
+                    </CCol>
+                    <CCol md={2} className="form-check form-switch form-switch-lg" style={{paddingLeft:'50px', paddingTop:'36px'}}>
+                        <CFormLabel htmlFor="inputEmail4">Privado</CFormLabel>
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefaultLg" onChangeCapture={event => setPrivateMatch(event?.currentTarget.checked)} value={privateMatch}/>
                     </CCol>
                     <CCol xs={3}>
                         <CFormLabel htmlFor="inputAddress">Quantidade de Participantes</CFormLabel>
@@ -122,6 +131,10 @@ const AddEvent = () => {
                     <CCol md={6}>
                         <CFormLabel htmlFor="inputEmail4">Complemento</CFormLabel>
                         <CFormInput placeholder="Complemento" autoComplete="complement" type="text" onChange={(event) => {setComplement(event.target?.value)}} value={complement} />
+                    </CCol>
+                    <CCol md={6}>
+                        <CFormLabel htmlFor="inputEmail4">Link WhatsApp</CFormLabel>
+                        <CFormInput placeholder="Link WhatsApp" autoComplete="whatsappGroupLink" type="text" onChange={(event) => {setWhatsappGroupLink(event.target?.value)}} value={whatsappGroupLink} />
                     </CCol>
                     <CCol xs={12}>
                         <CButton type="submit">Salvar</CButton>
